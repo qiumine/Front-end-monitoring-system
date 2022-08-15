@@ -15,9 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from . import api
+from django.urls import re_path as url
+from . import api,camera
 
 urlpatterns = [
     url(r'^senddata/$', api.senddata, name='senddata'),
-
 ]
