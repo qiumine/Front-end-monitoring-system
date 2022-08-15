@@ -13,7 +13,7 @@ function getExtraData() {
 }
 class SendTracket {
     constructor() {
-        this.url = 'http://127.0.0.1:8000/sendBeacon-server'; //上报的路径
+        this.url = 'http://127.0.0.1:8000/senddata'; //上报的路径
     }
 
     send(data = {}) {
@@ -26,20 +26,6 @@ class SendTracket {
             }
         }
         console.log('log:', log);
-        // let body = JSON.stringify({
-        //     __logs__: [log]
-        // });
-        // this.xhr.open('POST', this.url, true);
-        // this.xhr.setRequestHeader('Content-Type', 'application/json'); //请求体类型
-        // this.xhr.setRequestHeader('x-log-apiversion', '0.6.0'); //本版号
-        // this.xhr.setRequestHeader('x-log-bodyrawsize', body.length); //请求体大小
-        // this.xhr.onload = function(){
-        //    // console.log(this.xhr.response);
-        // }
-        // this.xhr.onerror = function(error){
-        //    // console.log(error);
-        // }
-        // this.xhr.send(body);
         navigator.sendBeacon(this.url, JSON.stringify(log));
     }
 }
