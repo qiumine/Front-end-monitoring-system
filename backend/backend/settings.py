@@ -149,6 +149,8 @@ CORS_ALLOW_HEADERS = (
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'x-log-bodyrawsize',
+    'x-log-apiversion',
 )
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080',
