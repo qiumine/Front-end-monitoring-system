@@ -2,6 +2,7 @@
 
 项目部署：
 
-    npm install
-    
-    npm run dev
+```
+npm install
+npm run dev
+```
