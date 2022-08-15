@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import re_path as url
 from . import api,camera
+from camera import views
 
 urlpatterns = [
-    url(r'^senddata/$', api.senddata, name='senddata'),
+    url(r'^senddata/$', views.getdata, name='senddata'),
 ]
