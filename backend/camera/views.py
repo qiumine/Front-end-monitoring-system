@@ -1,3 +1,4 @@
+from urllib import response
 from django.shortcuts import render
 from django.views.decorators import csrf
 from django.http import HttpResponse
