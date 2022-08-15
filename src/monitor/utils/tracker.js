@@ -11,11 +11,11 @@ function getExtraData() {
         userAgent: userAgent.parse(navigator.userAgent).name,
     }
 }
-class SendTracket{
-    constructor(){
+class SendTracket {
+    constructor() {
         //this.url = `http://${project}.${host}/logstores/${logStore}/track`; //上报的路径
         this.url = 'http://127.0.0.1:8000/senddata/'
-        this.xhr = new XMLHttpRequest;
+        // this.xhr = new XMLHttpRequest;
     }
 
     send(data = {}) {
