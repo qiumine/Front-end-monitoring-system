@@ -1,26 +1,27 @@
 
-function getSelector(path){
-    return path.reverse().filter(element=>{
-        return element !== document && element!== window;
-    }).map(element=> {
+function getSelector(path) {
+    //反转过滤选择器
+    return path.reverse().filter(element => {
+        return element !== document && element !== window;
+    }).map(element => {
         let selector = '';
-        if(element.id){
+        if (element.id) {
             return `${element.nodeName.toLowerCase()}#${element.id}`;
-        }else if(element.className){
+        } else if (element.className) {
             return `${element.nodeName.toLowerCase()}.${element.className}`;
-        }else{
+        } else {
             selector = element.nodeName.toLowerCase();
         }
         return selector;
     }).join(' ');
 }
 
-export default function(pathsOrTarget){
-    if(Array.isArray(pathsOrTarget)){
+export default function (pathsOrTarget) {
+    if (Array.isArray(pathsOrTarget)) {
         return getSelector(pathsOrTarget);
-    }else{
+    } else {
         let path = [];
-        while(pathsOrTarget){
+        while (pathsOrTarget) {
             path.push(pathsOrTarget);
             pathsOrTarget = pathsOrTarget.parentNode;
         }

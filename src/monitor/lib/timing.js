@@ -9,38 +9,38 @@ export function timing() {
         let perEntries = entryList.getEntries();
         FMP = perEntries[0];
         observer.disconnect();   //停止观察
-    }).observe({entryTypes: ['element']});  //观察页面中有意义元素
-    
+    }).observe({ entryTypes: ['element'] });  //观察页面中有意义元素
+
     new PerformanceObserver((entryList, observer) => {
         let perEntries = entryList.getEntries();
         LCP = perEntries[0];
         observer.disconnect();   //停止观察
-    }).observe({entryTypes: ['largest-contentful-paint']});  //观察页面中最大元素
-    
+    }).observe({ entryTypes: ['largest-contentful-paint'] });  //观察页面中最大元素
+
     new PerformanceObserver((entryList, observer) => {
         let lastEvent = getLastEvent();
-       let firstInput = entryList.getEntries()[0];
-       console.log('FID', firstInput);
-       if(firstInput){
-        //processingStart开始处理时间 startTime开始点击时间 差值为处理延时
-        let inputDelay = firstInput.processingStart - firstInput.startTime;
-        let duration = firstInput.duration;
-        if(inputDelay>0 || duration>0){
-            tracker.send({
-                kind: 'experience', //用户体验指标
-                type: 'firstInputDelay',    //首次输入延时
-                inputDelay, //延时时间
-                duration,   //处理时间
-                startTime: firstInput.startTime,
-                Selector: lastEvent? getSelector(lastEvent.path || lastEvent.target) : '',
-                
-            });
-        }
-       }
-        observer.disconnect();   //停止观察
-    }).observe({type: 'first-input', buffered: true});  //观察页面用户第一次交互
+        let firstInput = entryList.getEntries()[0];
+        console.log('FID', firstInput);
+        if (firstInput) {
+            //processingStart开始处理时间 startTime开始点击时间 差值为处理延时
+            let inputDelay = firstInput.processingStart - firstInput.startTime;
+            let duration = firstInput.duration;
+            if (inputDelay > 0 || duration > 0) {
+                tracker.send({
+                    kind: 'experience', //用户体验指标
+                    type: 'firstInputDelay',    //首次输入延时
+                    inputDelay, //延时时间
+                    duration,   //处理时间
+                    startTime: firstInput.startTime,
+                    Selector: lastEvent ? getSelector(lastEvent.path || lastEvent.target) : '',
 
-    onload(function(){
+                });
+            }
+        }
+        observer.disconnect();   //停止观察
+    }).observe({ type: 'first-input', buffered: true });  //观察页面用户第一次交互
+
+    onload(function () {
         setTimeout(() => {
             const {
                 fetchStart,
@@ -52,7 +52,9 @@ export function timing() {
                 domContentLoadedEventStart,
                 domContentLoadedEventEnd,
                 loadEventStart,
-                domComplete
+                domComplete,
+                domainLookupEnd,
+                domainLookupStart,
             } = performance.getEntriesByType("navigation")[0];
             tracker.send({
                 kind: 'experience', //用户体验指标
@@ -60,25 +62,28 @@ export function timing() {
                 connectTime: connectEnd - connectStart,    //TCP连接时间
                 ttfbTime: responseEnd - responseStart,  //首字节到达时间
                 responseTime: responseEnd - responseStart,  //响应的读取时间
-                parseDOMTime:  domComplete - domInteractive,  //DOM解析时间
-                domContentLoadedTime: domContentLoadedEventEnd - domContentLoadedEventStart,
+                parseDOMTime: domComplete - domInteractive,  //DOM解析时间
+                domContentLoadedTime: domContentLoadedEventEnd - domContentLoadedEventStart,    //DOMContentLoaded 事件耗时
                 timeToInteractive: domInteractive - fetchStart, //首次可交互时间
                 loadTime: loadEventStart - fetchStart,   //完整加载时间
+                dnsTime: domainLookupEnd - domainLookupStart, // DNS 解析耗时
+                domReady: domContentLoadedEventEnd - fetchStart,    //DOM阶段渲染耗时
             });
             let FP = performance.getEntriesByName('first-paint')[0];
             let FCP = performance.getEntriesByName('first-contentful-paint')[0];
             //发送性能指标
-            console.log('FMP',FMP);
-            console.log('FP',FP);
-            console.log('FCP',FCP);
-            console.log('LCP',LCP);
+            console.log('FMP', FMP);
+            console.log('FP', FP);
+            console.log('FCP', FCP);
+            console.log('LCP', LCP);
             tracker.send({
                 kind: 'experience', //用户体验指标
                 type: 'paint',    //首次输入延时
-                firstPaint: FP.startTime, 
-                firstContentfulPaint: FCP.startTime, 
-                firstMeaningfulPaint: FMP.startTime, 
-                largestContentfulPaint: LCP.startTime, 
+                //!格式化时间，是否存在
+                firstPaint: FP.startTime,
+                firstContentfulPaint: FCP.startTime,
+                firstMeaningfulPaint: FMP.startTime,
+                largestContentfulPaint: LCP.startTime,
             });
         }, 3000);
         console.log(performance.getEntriesByType("navigation"));
