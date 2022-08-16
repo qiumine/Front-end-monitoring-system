@@ -8,9 +8,9 @@ export function pv() {
         kind: "business",
         type: "pv",
         startTime: performance.now(),
-        pageURL: getPageURL(),
+        pageURL: getPageURL(),  //页面url
         referrer: document.referrer,
-        uuid: getUUID(), //业务相关
+        uuid: getUUID(),    //通用唯一识别码（Universally Unique Identifier）
     });
     let startTime = Date.now();
     window.addEventListener("beforeunload", () => {
@@ -20,8 +20,8 @@ export function pv() {
             kind: "business",
             type: "stayTime",
             stayTime,   //页面停留时间
-            pageURL: getPageURL(),
-            uuid: getUUID(),     //业务相关
+            pageURL: getPageURL(), //页面url
+            uuid: getUUID(),  //通用唯一识别码（Universally Unique Identifier）
         });
     },
         false
