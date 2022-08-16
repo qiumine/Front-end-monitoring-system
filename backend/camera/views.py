@@ -1,31 +1,37 @@
+import json
 from urllib import response
 from django.shortcuts import render
 from django.views.decorators import csrf
 from django.http import HttpResponse
-from web.views import savedata
+from web.views import savedata_resourceError,savedata_jsError,savedata_blank,savedata_xhr,savedata_firstInputDelay,savedata_timing,savedata_paint
 # Create your views here.
 def getdata(request):
+
     if request.method == 'POST':
-        Type=request.POST.get('type')
+        json_dict=json.loads(request.body)
+        Type=json_dict.get('type')
+        
         if Type == 'error':
-            errorType=request.POST.get('errorType')
+            errorType=json_dict.get('errorType')
             if errorType == 'resourceError':
-                return savedata(request)
+                return savedata_resourceError(request)
             elif errorType == 'jsError':
-                return savedata(request)
+                return savedata_jsError(request)
             elif errorType == 'promiseError':
-                return savedata(request)
+                return savedata_jsError(request)
+            else:
+                return HttpResponse("THIS ERROR DONT EXISTS")
         elif Type == 'blank':
-            return savedata(request)
+            return savedata_blank(request)
         elif Type == 'xhr':
-            return savedata(request)
+            return savedata_xhr(request)
         elif Type == 'firstInputDelay':
-            return savedata(request)
+            return savedata_firstInputDelay(request)
         elif Type == 'timing':
-            return savedata(request)
+            return savedata_timing(request)
         elif Type == 'paint':
-            return savedata(request)
+            return savedata_paint(request)
         else:
             return HttpResponse("ERROR")
     else:
-        return HttpResponse("ERROR")
+        return HttpResponse("GET")

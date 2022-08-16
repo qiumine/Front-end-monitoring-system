@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'web.apps.WebConfig',
     'camera.apps.CameraConfig',
+    'web',
     'corsheaders',
 ]
 
@@ -85,7 +85,7 @@ DATABASES = {
         'HOST': '127.0.0.1', # 数据库地址，本机 ip 地址 127.0.0.1 
         'PORT': 3306, # 端口 
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': 'admin123', # 数据库密码
+        'PASSWORD': '001219', # 数据库密码
     }
 }
 
