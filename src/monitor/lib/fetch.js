@@ -16,7 +16,6 @@ export function injectFetch() {
 
         return originalFetch(url, config)
             .then(res => {
-                // console.log('res:' + res);
                 reportData.endTime = Date.now();
                 reportData.duration = reportData.endTime - reportData.startTime;
 
@@ -24,9 +23,11 @@ export function injectFetch() {
                 reportData.status = data.status; //状态码
                 reportData.success = data.ok; //true flase
 
+                return res.json();
+            }).then(function (response) {
+                console('response', response);
+                reportData.response = response ? response : '';//响应体
                 tracker.send(reportData);
-
-                return res;
             })
             .catch(err => {
                 console.log('err:' + err);

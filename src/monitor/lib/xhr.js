@@ -25,7 +25,7 @@ export function injectXHR() {
                     pathname: this.logData.url, //请求路径
                     status: status + '-' + statusText, //他状态码
                     duration, // 持续时间
-                    response: this.response ? JSON.stringify(this.response) : '', //响应体
+                    response: this.response ? this.response : '', //响应体
                     params: body || ''
                 });
             }
