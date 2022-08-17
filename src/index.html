@@ -6,30 +6,47 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>前端监控SDK</title>
+    <link rel="stylesheet" href="/someStyle">
 </head>
 
 <body>
     <div id="container">
         <div class="content main">
+            <!-- error错误 -->
             <input type="button" value="点击抛出错误" onclick="errorClick()">
+            <!-- Promise错误 -->
             <input type="button" value="点击抛出Promise错误" onclick="promiseErrorClick()">
             <p style="color: red">HELLO</p>
             xxx
+            <!-- ajax成功请求 -->
             <input id="successBtn" type="button" value="ajax成功请求" onclick="sendSuccess()">
+            <!-- ajax失败请求 -->
             <input id="errorBtn" type="button" value="ajax失败请求" onclick="sendError()">
+            <!-- fetch失败请求 -->
+            <input id="errorBtn" type="button" value="fetch失败请求" onclick="sendFetchError()">
+            <!-- fetch成功请求 -->
+            <input id="errorBtn" type="button" value="fetch失败请求" onclick="sendFetchSuccess()">
 
         </div>
     </div>
     <script>
+        // error错误
         function errorClick() {
             //someVar未定义
             window.someVar.error = 'error';
         }
 
+        // promise错误
         function promiseErrorClick() {
-
+            new Promise(function (resolve, reject) {
+                // window.someVar.error = 'error';
+                reject('error');
+            }).then(result => {
+                console.log(result);
+            });
         }
 
+        // ajax成功请求
         function sendSuccess() {
             let xhr = new XMLHttpRequest;
             xhr.open('GET', '/success', true);
@@ -40,6 +57,7 @@
             xhr.send();
         }
 
+        // ajax错误请求
         function sendError() {
             let xhr = new XMLHttpRequest;
             xhr.open('POST', '/error', true);
@@ -53,13 +71,30 @@
             xhr.send("name=luo");
         }
 
+        // fecth错误请求
+        function sendFetchError() {
+            fetch('/error', {
+                method: 'POST',
+                headers: {
+                    name: 'error'
+                },
+                body: 'erroe',
+            })
+        }
+
+        // fecth成功请求
+        function sendFetchSuccess() {
+            fetch('/success', {
+                method: 'GET',
+                headers: {
+                    name: 'success'
+                }
+            })
+        }
+
         // document.addEventListener('DOMContentLoaded', () => {
         //     let start = Date.now();
         //     while ((Date.now() - start < 1000)) { }
-        // });
-
-        // new Promise(function () {
-        //     throw new Error("Whoops!");
         // });
 
         setTimeout(() => {
@@ -70,8 +105,11 @@
             content.appendChild(h1);
 
         }, 2000)
-    </script>
 
+
+    </script>
+    <!-- 资源加载错误 -->
+    <script src="/someError.js" crossorigin></script>
 </body>
 
 </html>
