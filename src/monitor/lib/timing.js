@@ -31,7 +31,7 @@ export function timing() {
                     type: 'firstInputDelay',    //首次输入延时
                     inputDelay, //延时时间
                     duration,   //处理时间
-                    startTime: firstInput.startTime,
+                    startTime: firstInput.startTime, //首次输入开始时间
                     Selector: lastEvent ? getSelector(lastEvent.path || lastEvent.target) : '',
 
                 });
@@ -80,10 +80,10 @@ export function timing() {
                 kind: 'experience', //用户体验指标
                 type: 'paint',    //首次输入延时
                 //!格式化时间，是否存在
-                firstPaint: FP.startTime,
-                firstContentfulPaint: FCP.startTime,
-                firstMeaningfulPaint: FMP.startTime,
-                largestContentfulPaint: LCP.startTime,
+                firstPaint: FP ? FP.startTime : '',//首次绘制时间
+                firstContentfulPaint: FCP ? FCP.startTime : '',//首次内容绘制时间
+                firstMeaningfulPaint: FMP ? FMP.startTime : '',//首次有意义绘制时间
+                largestContentfulPaint: LCP ? LCP.startTime : '',//最大内容渲染时间
             });
         }, 3000);
         console.log(performance.getEntriesByType("navigation"));

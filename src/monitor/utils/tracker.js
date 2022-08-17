@@ -1,8 +1,6 @@
-let host = 'cn-guangzhou.log.aliyuncs.com';
-let project = 'my-monitor';
-let logStore = 'my-monitor-store';
 let userAgent = require('user-agent');
 
+//额外数据
 function getExtraData() {
     return {
         title: document.title,

@@ -6,23 +6,23 @@ export function injectFetch() {
     window.fetch = function newFetch(url, config) {
         const startTime = Date.now()
         const reportData = {
-            kind: 'stability',
-            type: 'fetch',
+            kind: 'stability',//监控指标的大类
+            type: 'fetch',//小类型
             startTime,
-            url,
+            url,//请求路径
             method: (config?.method || 'GET').toUpperCase(),
 
         }
 
         return originalFetch(url, config)
             .then(res => {
-                console.log('res:' + res);
+                // console.log('res:' + res);
                 reportData.endTime = Date.now();
                 reportData.duration = reportData.endTime - reportData.startTime;
 
                 const data = res.clone();
-                reportData.status = data.status;
-                reportData.success = data.ok;
+                reportData.status = data.status; //状态码
+                reportData.success = data.ok; //true flase
 
                 tracker.send(reportData);
 
