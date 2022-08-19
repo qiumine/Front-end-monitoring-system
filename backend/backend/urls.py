@@ -17,7 +17,15 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import re_path as url
 from camera import views
+from web import api
 
 urlpatterns = [
     url(r'^senddata/$', views.getdata, name='senddata'),
+    url(r'^get_resourceError/$', api.get_resourceError, name='get_resourceError'),
+    url(r'^get_jsError/$', api.get_jsError, name='get_jsError'),
+    url(r'^get_blank/$', api.get_blank, name='get_blank'),
+    url(r'^get_xhr/$', api.get_xhr, name='get_xhr'),
+    url(r'^get_firstInputDelay/$', api.get_firstInputDelay, name='get_firstInputDelay'),
+    url(r'^get_timing/$', api.get_timing, name='get_timing'),
+    url(r'^get_paint/$', api.get_paint, name='get_paint'),
 ]
