@@ -54,15 +54,33 @@
         </div>
       </div>
     </div>
+    <div class="main">
+      <div class="left">
+        <div class="title">
+          <span>待改</span>
+        </div>
+        <MainLeft></MainLeft>
+      </div>
+      <div class="right">
+        <div class="title">
+          <span>待改</span>
+        </div>
+        <MainRight></MainRight>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Center from "./Center";
+import MainLeft from "./MainLeft";
+import MainRight from "./MainRight";
 export default {
   name: "jsError",
   components: {
     Center,
+    MainLeft,
+    MainRight,
   },
   methods: {},
 };
@@ -71,30 +89,31 @@ export default {
 <style lang="scss" scoped>
 .header {
   display: flex;
-  height: 50vh;
+  height: calc(50vh - 25px);
   background-color: #e9eef3;
-  .left {
+  .left,
+  .right {
     width: 25%;
     height: 100%;
   }
   .center {
     height: 100%;
     flex: 1;
-    padding: 10px;
+    padding: 5px;
+    margin: 0;
     display: flex;
     flex-direction: column;
     .center-container {
       height: 100%;
+      width: 100%;
+      border-radius: 5px;
+      margin: 1% 0;
       background-color: #fff;
       .title {
         display: flex;
         margin: 5px;
       }
     }
-  }
-  .right {
-    width: 25%;
-    height: 100%;
   }
   .small {
     flex: 1;
@@ -115,6 +134,21 @@ export default {
       margin: 0 40px;
       text-align: center;
     }
+  }
+}
+.main {
+  display: flex;
+  background-color: #e9eef3;
+  height: calc(50vh - 25px);
+  margin: 0;
+  .left,
+  .right {
+    width: 50%;
+    height: 100%;
+    padding: 5px;
+    margin: 0 0.5%;
+    border-radius: 5px;
+    background-color: #fff;
   }
 }
 </style>

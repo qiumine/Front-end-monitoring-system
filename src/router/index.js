@@ -64,16 +64,28 @@ export const constantRoutes = [
     meta: { title: '应用', icon: 'example' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/main/index'),
-        meta: { title: '总览' }
+        path: 'error',
+        name: 'Error',
+        component: () => import('@/views/abnormal/index'),
+        meta: { title: '异常监控' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '满意度趋势' }
+        path: 'user',
+        name: 'User',
+        component: () => import('@/views/action/index'),
+        meta: { title: '用户行为数据' }
+      },
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/performance/index'),
+        meta: { title: '关键性能监控' }
+      },
+      {
+        path: 'http',
+        name: 'Http',
+        component: () => import('@/views/request/index'),
+        meta: { title: 'HTTP请求监控' }
       }
     ]
   },
