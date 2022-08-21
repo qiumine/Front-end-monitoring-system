@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views.decorators import csrf
 from django.http import HttpResponse, JsonResponse
 from web.models import BLANKSCREEN
-from web.models import resourceError,jsError,firstInput,timing,paint,xhr
+from web.models import resourceError,jsError,firstInput,timing,paint,xhr,fetch
 from django.forms.models import model_to_dict
 import time
 
@@ -140,7 +140,7 @@ def getBlank(request):
 #ApiError
 def getApiErrorbyHour(request):
     obj1 = xhr.objects
-    #obj2 = fetch.objects
+    obj2 = fetch.objects
     trend = {}
     #xhr trend
     for item in obj1.all():
@@ -164,7 +164,7 @@ def getApiErrorbyHour(request):
             trend[format_date]['xhr']['total'] += 1
             trend[format_date]['xhr']['error'] += 1 if item.status != '200-OK' else 0
     #fetch trend
-    """
+    
     for item in obj2.all():
         timestamp = item.timestamp
         date = time.localtime(int(timestamp) / 1000)
@@ -185,7 +185,7 @@ def getApiErrorbyHour(request):
             trend[format_date]['total'] += 1
             trend[format_date]['fetch']['total'] += 1
             trend[format_date]['fetch']['error'] += 1 if item.success == 'false' else 0
-    """
+    
     response_dict = {
         'code' : 200, 
         'msg': 'Success!', 
@@ -195,7 +195,7 @@ def getApiErrorbyHour(request):
 
 def getApiErrorbyDay(request):
     obj1 = xhr.objects
-    #obj2 = fetch.objects
+    obj2 = fetch.objects
     trend = {}
     #xhr trend
     for item in obj1.all():
@@ -219,7 +219,7 @@ def getApiErrorbyDay(request):
             trend[format_date]['xhr']['total'] += 1
             trend[format_date]['xhr']['error'] += 1 if item.status != '200-OK' else 0
     #fetch trend
-    """
+    
     for item in obj2.all():
         timestamp = item.timestamp
         date = time.localtime(int(timestamp) / 1000)
@@ -240,7 +240,7 @@ def getApiErrorbyDay(request):
             trend[format_date]['total'] += 1
             trend[format_date]['fetch']['total'] += 1
             trend[format_date]['fetch']['error'] += 1 if item.success == 'false' else 0
-    """
+    
     response_dict = {
         'code' : 200, 
         'msg': 'Success!', 
@@ -250,7 +250,7 @@ def getApiErrorbyDay(request):
 
 def getApiError(request):
     obj1 = xhr.objects
-    #obj2 = fetch.objects
+    obj2 = fetch.objects
 
     response_dict = {
         'code' : 200, 
@@ -262,10 +262,10 @@ def getApiError(request):
                 'error' : len(obj1.filter(type__exact='xhr')) - 
                           len(obj1.filter(type__exact='xhr', status__exact='200-OK'))
             },
-            #'fetch' : {
-            #    'total' : len(obj2.filter(type__exact='fetch')),
-            #    'error' : len(obj2.filter(type__exact='fetch', success__exact='false'))
-            #}
+            'fetch' : {
+               'total' : len(obj2.filter(type__exact='fetch')),
+               'error' : len(obj2.filter(type__exact='fetch', success__exact='false'))
+            }
         }
     }
     return JsonResponse(data=response_dict, safe=True)
