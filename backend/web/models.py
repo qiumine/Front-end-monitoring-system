@@ -70,3 +70,32 @@ class xhr(models.Model):
     response = models.CharField(max_length=300)
     params = models.CharField(max_length=300)
     timestamp = models.CharField(max_length=30,default=0)
+
+class fetch(models.Model):
+    kind = models.CharField(max_length=30)
+    type = models.CharField(max_length=30)
+    startTime = models.CharField(max_length=30)
+    url = models.CharField(max_length=30)
+    method = models.CharField(max_length=30)
+    endTime = models.CharField(max_length=30)
+    duration = models.CharField(max_length=30)
+    status = models.CharField(max_length=100)
+    success = models.CharField(max_length=30)
+    response = models.CharField(max_length=100)
+    timestamp = models.CharField(max_length=30,default=0)
+
+
+class pv(models.Model):
+    kind = models.CharField(max_length=30)
+    type = models.CharField(max_length=30)
+    startTime = models.CharField(max_length=30)
+    pageURL = models.CharField(max_length=30)
+    referrer = models.CharField(max_length=30)
+    uuid = models.CharField(max_length=30)
+
+class stayTime(models.Model):
+    kind = models.CharField(max_length=30)
+    type = models.CharField(max_length=30)
+    stayTime = models.CharField(max_length=30)
+    pageURL = models.CharField(max_length=30)
+    uuid = models.CharField(max_length=30)
