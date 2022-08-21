@@ -76,7 +76,7 @@ import Center from "./Center";
 import MainLeft from "./MainLeft";
 import MainRight from "./MainRight";
 export default {
-  name: "jsError",
+  name: "action",
   components: {
     Center,
     MainLeft,
@@ -107,7 +107,7 @@ export default {
       height: 100%;
       width: 100%;
       border-radius: 5px;
-      margin: 1% 0;
+      margin: 5px 0;
       background-color: #fff;
       .title {
         display: flex;
@@ -119,7 +119,7 @@ export default {
     flex: 1;
     height: 46%;
     background: #fff;
-    margin: 2.5% 2%;
+    margin: 10px 7px;
     border-radius: 3px;
     display: flex;
     flex-direction: column;
