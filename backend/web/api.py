@@ -20,31 +20,6 @@ def getResourceError(request):
     }
     return JsonResponse(data=response_dict, safe=True)
 
-def getJsErrorbyDay(request):
-    obj = jsError.objects
-    trend = {}
-    for item in obj.all():
-        timestamp = item.timestamp
-        date = time.localtime(int(timestamp) / 1000)
-        format_date = time.strftime('%Y-%m-%d', date)
-        js = 1 if item.errorType == 'jsError' else 0
-        if format_date not in trend:
-            trend[format_date] = {
-                'total' : 1, 
-                'jsError' : js,
-                'promiseError' : 1 - js
-            }
-        else:
-            trend[format_date]['total'] += 1
-            trend[format_date]['jsError'] += js
-            trend[format_date]['promiseError'] += 1 - js
-
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
 def getResourceErrorbyDay(request):
     obj = resourceError.objects
     trend = {}
