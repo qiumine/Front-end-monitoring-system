@@ -22,9 +22,16 @@ from web import api
 urlpatterns = [
     url(r'^senddata/$', views.getdata, name='senddata'),
     url(r'^get_resourceError/$', api.get_resourceError, name='get_resourceError'),
-    url(r'^get_jsError/$', api.get_jsError, name='get_jsError'),
+    #jserror
+    url(r'^getJsError/$', api.getJsError, name='getJsError'),
+    url(r'^getJsErrorbyDay/$', api.getJsErrorbyDay, name='getJsErrorbyDay'),
+    url(r'^getJsErrorbyHour/$', api.getJsErrorbyHour, name='getJsErrorbyHour'),
+    #Blank
     url(r'^getBlank/$', api.getBlank, name='getBlank'),
+    #ApiError
     url(r'^getApiError/$', api.getApiError, name='getApiError'),
+    url(r'^getApiErrorbyDay/$', api.getApiErrorbyDay, name='getApiErrorbyDay'),
+    url(r'^getApiErrorbyHour/$', api.getApiErrorbyHour, name='getApiErrorbyHour'),
     #firstInput
     url(r'^getFirstInputDelay/$', api.getFirstInputDelay, name='getFirstInputDelay'),
     #time

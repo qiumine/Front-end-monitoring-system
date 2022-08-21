@@ -12,9 +12,70 @@ def get_resourceError(request):
     response = json.dumps(list(resourceError.objects.all()))
     return JsonResponse(data=response)
 
-def get_jsError(request):
-    response = json.dumps(list(jsError.objects.all()))
-    return JsonResponse(data=response)
+#JsError
+def getJsError(request):
+    obj = jsError.objects
+    response_dict = {
+        'code' : 200, 
+        'msg': 'Success!', 
+        'data' : {
+            'total' : len(obj.all()),
+            'jsError' : len(obj.filter(errorType__exact='jsError')), 
+            'promiseError' : len(obj.filter(errorType__exact='promiseError'))
+        }
+    }
+    return JsonResponse(data=response_dict, safe=True)
+def getJsErrorbyHour(request):
+    obj = jsError.objects
+    trend = {}
+    for item in obj.all():
+        timestamp = item.timestamp
+        date = time.localtime(int(timestamp) / 1000)
+        format_date = time.strftime('%Y-%m-%d %H', date)
+        js = 1 if item.errorType == 'jsError' else 0
+        if format_date not in trend:
+            trend[format_date] = {
+                'total' : 1, 
+                'jsError' : js,
+                'promiseError' : 1 - js
+            }
+        else:
+            trend[format_date]['total'] += 1
+            trend[format_date]['jsError'] += js
+            trend[format_date]['promiseError'] += 1 - js
+
+    response_dict = {
+        'code' : 200, 
+        'msg': 'Success!', 
+        'data' : trend
+    }
+    return JsonResponse(data=response_dict, safe=True)
+
+def getJsErrorbyDay(request):
+    obj = jsError.objects
+    trend = {}
+    for item in obj.all():
+        timestamp = item.timestamp
+        date = time.localtime(int(timestamp) / 1000)
+        format_date = time.strftime('%Y-%m-%d', date)
+        js = 1 if item.errorType == 'jsError' else 0
+        if format_date not in trend:
+            trend[format_date] = {
+                'total' : 1, 
+                'jsError' : js,
+                'promiseError' : 1 - js
+            }
+        else:
+            trend[format_date]['total'] += 1
+            trend[format_date]['jsError'] += js
+            trend[format_date]['promiseError'] += 1 - js
+
+    response_dict = {
+        'code' : 200, 
+        'msg': 'Success!', 
+        'data' : trend
+    }
+    return JsonResponse(data=response_dict, safe=True)
 
 #blank
 def getBlank(request):
@@ -27,7 +88,62 @@ def getBlank(request):
     return JsonResponse(data=response_dict, safe=True)
 
 #ApiError
-def getApiError(request):
+def getApiErrorbyHour(request):
+    obj1 = xhr.objects
+    #obj2 = fetch.objects
+    trend = {}
+    #xhr trend
+    for item in obj1.all():
+        timestamp = item.timestamp
+        date = time.localtime(int(timestamp) / 1000)
+        format_date = time.strftime('%Y-%m-%d %H', date)
+        if format_date not in trend:
+            trend[format_date] = {
+                'total' : 1, 
+                'xhr' : {
+                    'total' : 1,
+                    'error' : 1 if item.status != '200-OK' else 0
+                },
+                'fetch' : {
+                    'total' : 0,
+                    'error' : 0
+                }
+            }
+        else:
+            trend[format_date]['total'] += 1
+            trend[format_date]['xhr']['total'] += 1
+            trend[format_date]['xhr']['error'] += 1 if item.status != '200-OK' else 0
+    #fetch trend
+    """
+    for item in obj2.all():
+        timestamp = item.timestamp
+        date = time.localtime(int(timestamp) / 1000)
+        format_date = time.strftime('%Y-%m-%d', date)
+        if format_date not in trend:
+            trend[format_date] = {
+                'total' : 1, 
+                'xhr' : {
+                    'total' : 0,
+                    'error' : 0
+                },
+                'fetch' : {
+                    'total' : 1,
+                    'error' : 1 if item.success == 'false' else 0
+                }
+            }
+        else:
+            trend[format_date]['total'] += 1
+            trend[format_date]['fetch']['total'] += 1
+            trend[format_date]['fetch']['error'] += 1 if item.success == 'false' else 0
+    """
+    response_dict = {
+        'code' : 200, 
+        'msg': 'Success!', 
+        'data' : trend
+    }
+    return JsonResponse(data=response_dict, safe=True)
+
+def getApiErrorbyDay(request):
     obj1 = xhr.objects
     #obj2 = fetch.objects
     trend = {}
@@ -75,6 +191,16 @@ def getApiError(request):
             trend[format_date]['fetch']['total'] += 1
             trend[format_date]['fetch']['error'] += 1 if item.success == 'false' else 0
     """
+    response_dict = {
+        'code' : 200, 
+        'msg': 'Success!', 
+        'data' : trend
+    }
+    return JsonResponse(data=response_dict, safe=True)
+
+def getApiError(request):
+    obj1 = xhr.objects
+    #obj2 = fetch.objects
 
     response_dict = {
         'code' : 200, 
@@ -90,7 +216,6 @@ def getApiError(request):
             #    'total' : len(obj2.filter(type__exact='fetch')),
             #    'error' : len(obj2.filter(type__exact='fetch', success__exact='false'))
             #}
-            'trend' : trend
         }
     }
     return JsonResponse(data=response_dict, safe=True)
