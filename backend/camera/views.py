@@ -3,7 +3,7 @@ from urllib import response
 from django.shortcuts import render
 from django.views.decorators import csrf
 from django.http import HttpResponse
-from web.views import savedata_resourceError,savedata_jsError,savedata_blank,savedata_xhr,savedata_firstInputDelay,savedata_timing,savedata_paint
+from web.views import savedata_resourceError,savedata_jsError,savedata_blank,savedata_xhr,savedata_firstInputDelay,savedata_timing,savedata_paint,savedata_pv,savedata_stayTime,savedata_fetch
 # Create your views here.
 def getdata(request):
 
@@ -31,6 +31,12 @@ def getdata(request):
             return savedata_timing(request)
         elif Type == 'paint':
             return savedata_paint(request)
+        elif Type == 'fetch':
+            return savedata_pv(request)
+        elif Type == 'stayTime':
+            return savedata_stayTime(request)
+        elif Type == 'pv':
+            return savedata_pv(request)
         else:
             return HttpResponse("ERROR")
     else:
