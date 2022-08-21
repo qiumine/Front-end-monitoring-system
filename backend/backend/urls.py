@@ -23,8 +23,8 @@ urlpatterns = [
     url(r'^senddata/$', views.getdata, name='senddata'),
     url(r'^get_resourceError/$', api.get_resourceError, name='get_resourceError'),
     url(r'^get_jsError/$', api.get_jsError, name='get_jsError'),
-    url(r'^get_blank/$', api.get_blank, name='get_blank'),
-    url(r'^get_xhr/$', api.get_xhr, name='get_xhr'),
+    url(r'^getBlank/$', api.getBlank, name='getBlank'),
+    url(r'^getApiError/$', api.getApiError, name='getApiError'),
     #firstInput
     url(r'^getFirstInputDelay/$', api.getFirstInputDelay, name='getFirstInputDelay'),
     #time
