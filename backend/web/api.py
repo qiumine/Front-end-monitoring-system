@@ -8,9 +8,84 @@ from web.models import resourceError,jsError,firstInput,timing,paint,xhr
 from django.forms.models import model_to_dict
 import time
 
-def get_resourceError(request):
-    response = json.dumps(list(resourceError.objects.all()))
-    return JsonResponse(data=response)
+#ResourceError
+def getResourceError(request):
+    obj = resourceError.objects
+    response_dict = {
+        'code' : 200, 
+        'msg': 'Success!', 
+        'data' : {
+            'total' : len(obj.all()),
+        }
+    }
+    return JsonResponse(data=response_dict, safe=True)
+
+def getJsErrorbyDay(request):
+    obj = jsError.objects
+    trend = {}
+    for item in obj.all():
+        timestamp = item.timestamp
+        date = time.localtime(int(timestamp) / 1000)
+        format_date = time.strftime('%Y-%m-%d', date)
+        js = 1 if item.errorType == 'jsError' else 0
+        if format_date not in trend:
+            trend[format_date] = {
+                'total' : 1, 
+                'jsError' : js,
+                'promiseError' : 1 - js
+            }
+        else:
+            trend[format_date]['total'] += 1
+            trend[format_date]['jsError'] += js
+            trend[format_date]['promiseError'] += 1 - js
+
+    response_dict = {
+        'code' : 200, 
+        'msg': 'Success!', 
+        'data' : trend
+    }
+    return JsonResponse(data=response_dict, safe=True)
+def getResourceErrorbyDay(request):
+    obj = resourceError.objects
+    trend = {}
+    for item in obj.all():
+        timestamp = item.timestamp
+        date = time.localtime(int(timestamp) / 1000)
+        format_date = time.strftime('%Y-%m-%d', date)
+        if format_date not in trend:
+            trend[format_date] = {
+                'total' : 1, 
+            }
+        else:
+            trend[format_date]['total'] += 1
+
+    response_dict = {
+        'code' : 200, 
+        'msg': 'Success!', 
+        'data' : trend
+    }
+    return JsonResponse(data=response_dict, safe=True)
+
+def getResourceErrorbyHour(request):
+    obj = resourceError.objects
+    trend = {}
+    for item in obj.all():
+        timestamp = item.timestamp
+        date = time.localtime(int(timestamp) / 1000)
+        format_date = time.strftime('%Y-%m-%d %H', date)
+        if format_date not in trend:
+            trend[format_date] = {
+                'total' : 1, 
+            }
+        else:
+            trend[format_date]['total'] += 1
+
+    response_dict = {
+        'code' : 200, 
+        'msg': 'Success!', 
+        'data' : trend
+    }
+    return JsonResponse(data=response_dict, safe=True)
 
 #JsError
 def getJsError(request):
@@ -232,7 +307,7 @@ def getFirstInputDelay(request):
 
 #time
 def getTiming(request):
-    row = paint.objects.last()
+    row = timing.objects.last()
     response_dict = {
         'code' : 200, 
         'msg': 'Success!', 
