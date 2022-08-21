@@ -25,7 +25,14 @@ urlpatterns = [
     url(r'^get_jsError/$', api.get_jsError, name='get_jsError'),
     url(r'^get_blank/$', api.get_blank, name='get_blank'),
     url(r'^get_xhr/$', api.get_xhr, name='get_xhr'),
-    url(r'^get_firstInputDelay/$', api.get_firstInputDelay, name='get_firstInputDelay'),
-    url(r'^get_timing/$', api.get_timing, name='get_timing'),
-    url(r'^get_paint/$', api.get_paint, name='get_paint'),
+    #firstInput
+    url(r'^getFirstInputDelay/$', api.getFirstInputDelay, name='getFirstInputDelay'),
+    #time
+    url(r'^getTiming/$', api.getTiming, name='getTiming'),
+    #paint
+    url(r'^getPaint/$', api.getPaint, name='getPaint'),
+    url(r'^getFCP/$', api.getFCP, name='getFCP'),
+    url(r'^getFP/$', api.getFP, name='getFP'),
+    url(r'^getLCP/$', api.getLCP, name='getLCP'),
+    url(r'^getFMP/$', api.getFMP, name='getFMP'),
 ]
