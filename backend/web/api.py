@@ -9,6 +9,8 @@ from web.models import resourceError,jsError,firstInput,timing,paint,xhr,fetch
 from django.forms.models import model_to_dict
 import time
 
+from statistics import mean
+
 #ResourceError
 def getResourceError(request):
     obj = resourceError.objects
@@ -274,63 +276,70 @@ def getApiError(request):
     }
     return JsonResponse(data=response_dict, safe=True)
 
+def getMean(value_list):
+    return mean(list(map(lambda x: 0 if x[0] == '' else float(x[0]), value_list)))
+
 #firstInput
 def getFirstInputDelay(request):
-    row = firstInput.objects.last()
+    obj = firstInput.objects
     response_dict = {
         'code' : 200, 
         'msg': 'Success!', 
-        'data' : model_to_dict(row)
+        'data' : {
+            "inputDelay": 0,
+            "duration": 0,
+            "startTime": 0,
+        }
     }
+    for key in response_dict['data'].keys():
+        response_dict['data'][key] = getMean(obj.values_list(key))
     return JsonResponse(data=response_dict, safe=True)
 
 #time
 def getTiming(request):
-    row = timing.objects.last()
+    obj = timing.objects
     response_dict = {
         'code' : 200, 
         'msg': 'Success!', 
-        'data' : model_to_dict(row)
+        'data' : {
+            "connectTime": 0,
+            "ttfbTime": 0,
+            "responseTime": 0,
+            "parseDOMTime": 0,
+            "domContentLoadedTime": 0,
+            "timeToInteractive": 0,
+            "loadTime": 0,
+            "dnsTime": 0,
+            "domReady": 0
+        }
     }
+    for key in response_dict['data'].keys():
+        response_dict['data'][key] = getMean(obj.values_list(key))
+    
     return JsonResponse(data=response_dict, safe=True)
 
 #paint
-def getFCP(request):
-    row = paint.objects.last()
-    response_dict = {'code' : 200, 'msg': 'Success!', 'data' : row.firstContentfulPaint }
-    return JsonResponse(data=response_dict, safe=True)
-def getFMP(request):
-    row = paint.objects.last()
-    response_dict = {'code' : 200, 'msg': 'Success!', 'data' : row.firstMeaningfulPaint }
-    return JsonResponse(data=response_dict, safe=True)
-def getFP(request):
-    row = paint.objects.last()
-    response_dict = {'code' : 200, 'msg': 'Success!', 'data' : row.firstPaint }
-    return JsonResponse(data=response_dict, safe=True)
-def getLCP(request):
-    row = paint.objects.last()
-    response_dict = {'code' : 200, 'msg': 'Success!', 'data' : row.largestContentfulPaint }
-    return JsonResponse(data=response_dict, safe=True)
+
 def getPaint(request):
-    row = paint.objects.last()
+    obj = paint.objects
     response_dict = {
         'code' : 200, 
         'msg': 'Success!', 
         'data' : 
             {
-                'firstContentFulPaint' : row.firstContentfulPaint,
-                'firstMeaningfulPaint' : row.firstMeaningfulPaint,
-                'firstPaint' : row.firstPaint,
-                'largestContentfulPaint' : row.largestContentfulPaint
+                'firstContentFulPaint' : getMean(obj.values_list('firstContentfulPaint')),
+                'firstMeaningfulPaint' : getMean(obj.values_list('firstMeaningfulPaint')),
+                'firstPaint' : getMean(obj.values_list('firstPaint')),
+                'largestContentfulPaint' : getMean(obj.values_list('largestContentfulPaint'))
             } 
     }
     return JsonResponse(data=response_dict, safe=True)
 #uv
 
-def getMac(x):
-    return x.uuid[-12:]
+def getUser(x):
+    return x.uuid.split('&&')[0] + x.uuid.split('&&')[1]
 def getUV(request):
-    obj = set(map(getMac, list(pv.objects.all())))
+    obj = set(map(getUser, list(pv.objects.all())))
     response_dict = {'code' : 200, 'msg': 'Success!', 'data' : len(obj) }
     return JsonResponse(data=response_dict, safe=True)
 def getUVbyDay(request):
@@ -342,7 +351,7 @@ def getUVbyDay(request):
         format_date = time.strftime('%Y-%m-%d', date)
         if format_date not in user:
             user[format_date] = []
-        user[format_date].append(getMac(item))
+        user[format_date].append(getUser(item))
     
     trend = {}
     for key in user.keys():
@@ -365,7 +374,7 @@ def getUVbyHour(request):
             user[day] = {}
             for i in range(24):
                 user[day][str(i).zfill(2)] = []
-        user[day][hour].append(getMac(item))
+        user[day][hour].append(getUser(item))
     
     trend = {}
     for day in user.keys():
@@ -427,10 +436,9 @@ def getPVbyHour(request):
     }
     return JsonResponse(data=response_dict, safe=True)
 
-from statistics import mean
 def getStaytime(request):
     obj = stayTime.objects.values_list('stayTime')
-    all = list(map(lambda x: int(x[0]), obj))
+    all = list(map(lambda x: float(x[0]), obj))
     response_dict = {
         'code' : 200, 
         'msg': 'Success!', 

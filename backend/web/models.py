@@ -49,6 +49,8 @@ class timing(models.Model):
     domContentLoadedTime = models.CharField(max_length=30)
     timeToInteractive = models.CharField(max_length=30)
     loadTime = models.CharField(max_length=30)
+    dnsTime = models.CharField(max_length=30)
+    domReady = models.CharField(max_length=30)
     timestamp = models.CharField(max_length=30,default=0)
 
 class paint(models.Model):

@@ -41,10 +41,6 @@ urlpatterns = [
     url(r'^getTiming/$', api.getTiming, name='getTiming'),
     #paint
     url(r'^getPaint/$', api.getPaint, name='getPaint'),
-    url(r'^getFCP/$', api.getFCP, name='getFCP'),
-    url(r'^getFP/$', api.getFP, name='getFP'),
-    url(r'^getLCP/$', api.getLCP, name='getLCP'),
-    url(r'^getFMP/$', api.getFMP, name='getFMP'),
     #pv
     url(r'^getPV/$', api.getPV, name='getPV'),
     url(r'^getPVbyDay/$', api.getPVbyDay, name='getPVbyDay'),
