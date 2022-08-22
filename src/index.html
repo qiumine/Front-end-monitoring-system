@@ -107,13 +107,8 @@
 
         }, 2000)
 
-
-        alert(returnCitySN["cip"] + ',' + returnCitySN["cname"])
-
-        // alert("获得的浏览器指纹是:" + getCanvasFp());
         sessionStorage.setItem('cip', returnCitySN["cip"]);
         sessionStorage.setItem('cfp', getCanvasFp());
-
 
         //获取Canvas Fingerprinting指纹，帆布指纹识别
         function getCanvasFp() {
