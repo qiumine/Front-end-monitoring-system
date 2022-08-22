@@ -91,11 +91,13 @@ class pv(models.Model):
     startTime = models.CharField(max_length=30)
     pageURL = models.CharField(max_length=30)
     referrer = models.CharField(max_length=30)
-    uuid = models.CharField(max_length=30)
+    uuid = models.CharField(max_length=40)
+    timestamp = models.CharField(max_length=30,default=0)
 
 class stayTime(models.Model):
     kind = models.CharField(max_length=30)
     type = models.CharField(max_length=30)
     stayTime = models.CharField(max_length=30)
     pageURL = models.CharField(max_length=30)
-    uuid = models.CharField(max_length=30)
+    uuid = models.CharField(max_length=40)
+    timestamp = models.CharField(max_length=30,default=0)

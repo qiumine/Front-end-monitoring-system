@@ -45,4 +45,14 @@ urlpatterns = [
     url(r'^getFP/$', api.getFP, name='getFP'),
     url(r'^getLCP/$', api.getLCP, name='getLCP'),
     url(r'^getFMP/$', api.getFMP, name='getFMP'),
+    #pv
+    url(r'^getPV/$', api.getPV, name='getPV'),
+    url(r'^getPVbyDay/$', api.getPVbyDay, name='getPVbyDay'),
+    url(r'^getPVbyHour/$', api.getPVbyHour, name='getPVbyHour'),
+    #uv
+    url(r'^getUV/$', api.getUV, name='getUV'),
+    url(r'^getUVbyDay/$', api.getUVbyDay, name='getUVbyDay'),
+    url(r'^getUVbyHour/$', api.getUVbyHour, name='getUVbyHour'),
+    #staytime
+    url(r'^getStaytime/$', api.getStaytime, name='getStaytime'),
 ]
