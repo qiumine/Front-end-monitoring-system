@@ -1,6 +1,6 @@
 import tracker from "../utils/tracker";
 import getPageURL from "../utils/getPageURL";
-import getUUID from "../utils/getUUID";
+import getUID from "../utils/getUID";
 
 export function pv() {
     //pv 页面浏览量上报
@@ -10,7 +10,7 @@ export function pv() {
         startTime: performance.now(),
         pageURL: getPageURL(),  //页面url
         referrer: document.referrer,
-        uuid: getUUID(),    //通用唯一识别码（Universally Unique Identifier）
+        uuid: getUID(),    //浏览器唯一标识
     });
     let startTime = Date.now();
     window.addEventListener("beforeunload", () => {
@@ -21,7 +21,7 @@ export function pv() {
             type: "stayTime",
             stayTime,   //页面停留时间
             pageURL: getPageURL(), //页面url
-            uuid: getUUID(),  //通用唯一识别码（Universally Unique Identifier）
+            uuid: getUID(),  //浏览器唯一标识
         });
     },
         false
