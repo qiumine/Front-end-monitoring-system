@@ -41,6 +41,7 @@ export default {
     background: #fff;
     margin: 20px 10px;
     border-radius: 20px;
+    border: 1px solid #000;
     display: flex;
     .sum {
       width: 25%;
@@ -86,6 +87,7 @@ export default {
       height: 30vh;
       background-color: #fff;
       border-radius: 25px;
+      border: 1px solid #000;
       display: flex;
       justify-content: center;
       align-items: center;
