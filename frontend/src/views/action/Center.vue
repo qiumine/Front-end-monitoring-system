@@ -16,7 +16,7 @@ export default {
     init() {
       //待改
       fetch(
-        "https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json"
+        "http://127.0.0.1:8000/getJsError/"
       )
         .then((res) => res.json())
         .then((data) => {

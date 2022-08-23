@@ -9,6 +9,24 @@ export default {
   data() {
     return {
       line: "",
+      data:[
+                {
+                    "Date": "2010-01",
+                    "scales": 1998
+                },
+                {
+                    "Date": "2010-02",
+                    "scales": 1850
+                },
+                {
+                    "Date": "2010-03",
+                    "scales": 1720
+                },
+                {
+                    "Date": "2010-04",
+                    "scales": 1818
+                },
+            ]
     };
   },
   computed: {},
@@ -21,7 +39,7 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           this.line = new Line("mainLeft", {
-            data,
+            data:this.data,
             padding: "auto",
             xField: "Date",
             yField: "scales",
