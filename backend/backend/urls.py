@@ -31,6 +31,8 @@ urlpatterns = [
     url(r'^getJsErrorbyHour/$', api.getJsErrorbyHour, name='getJsErrorbyHour'),
     #Blank
     url(r'^getBlank/$', api.getBlank, name='getBlank'),
+    url(r'^getBlankbyDay/$', api.getBlankbyDay, name='getBlankbyDay'),
+    url(r'^getBlankbyHour/$', api.getBlankbyHour, name='getBlankbyHour'),
     #ApiError
     url(r'^getApiError/$', api.getApiError, name='getApiError'),
     url(r'^getApiErrorbyDay/$', api.getApiErrorbyDay, name='getApiErrorbyDay'),
@@ -51,4 +53,5 @@ urlpatterns = [
     url(r'^getUVbyHour/$', api.getUVbyHour, name='getUVbyHour'),
     #staytime
     url(r'^getStaytime/$', api.getStaytime, name='getStaytime'),
+    url(r'^getStaytimeCharts/$', api.getStaytimeCharts, name='getStaytimeCharts'),
 ]

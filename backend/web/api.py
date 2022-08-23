@@ -11,15 +11,22 @@ import time
 
 from statistics import mean
 
+#Errors
+def getErrors(request):
+    response = [
+        {'type' : 'resource error', 'value' : len(resourceError.objects.all())},
+        {'type' : 'js error', 'value' : len(jsError.objects.filter(errorType__exact='jsError'))},
+        {'type' : 'promise error', 'value' : len(jsError.objects.filter(errorType__exact='promiseError'))},
+        {'type' : 'xhr error', 'value' : len(xhr.objects.all()) - len(xhr.filter(status__exact='200-OK'))},
+        {'type' : 'fetch error', 'value' : len(fetch.objects.filter(success__exact='false'))}
+    ]
+    return JsonResponse(data=response, safe=True)
+
 #ResourceError
 def getResourceError(request):
     obj = resourceError.objects
     response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : {
-            'total' : len(obj.all()),
-        }
+        'data' : len(obj.all()),
     }
     return JsonResponse(data=response_dict, safe=True)
 
@@ -31,18 +38,15 @@ def getResourceErrorbyDay(request):
         date = time.localtime(int(timestamp) / 1000)
         format_date = time.strftime('%Y-%m-%d', date)
         if format_date not in trend:
-            trend[format_date] = {
-                'total' : 1, 
-            }
+            trend[format_date] = 1
         else:
-            trend[format_date]['total'] += 1
-
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+            trend[format_date] += 1
+    
+    response = []
+    for key, value in trend.items():
+        response.append({'date': key, 'value': value})
+    
+    return JsonResponse(data={'data': response}, safe=True)
 
 def getResourceErrorbyHour(request):
     obj = resourceError.objects
@@ -58,20 +62,20 @@ def getResourceErrorbyHour(request):
                 trend[day][str(i).zfill(2)] = 0
         
         trend[day][hour] += 1
+    
+    response = []
+    for day, hours in trend.items():
+        item = {'date' : day, 'data' : []}
+        for hour, value in hours.items():
+            item['data'].append({'hour' : hour + ':00', 'value' : value})
+        response.append(item)
 
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+    return JsonResponse(data={'data': response}, safe=True)
 
 #JsError
 def getJsError(request):
     obj = jsError.objects
     response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
         'data' : {
             'total' : len(obj.all()),
             'jsError' : len(obj.filter(errorType__exact='jsError')), 
@@ -79,6 +83,7 @@ def getJsError(request):
         }
     }
     return JsonResponse(data=response_dict, safe=True)
+
 def getJsErrorbyHour(request):
     obj = jsError.objects
     trend = {}
@@ -99,13 +104,15 @@ def getJsErrorbyHour(request):
         trend[day][hour]['total'] += 1
         trend[day][hour]['jsError'] += js
         trend[day][hour]['promiseError'] += 1 - js
+    
+    response = []
+    for day, hours in trend.items():
+        item = {'date' : day, 'data' : []}
+        for hour, value in hours.items():
+            item['data'].append({'hour': hour + ':00', **value})
+        response.append(item)
 
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+    return JsonResponse(data={'data': response}, safe=True)
 
 def getJsErrorbyDay(request):
     obj = jsError.objects
@@ -126,22 +133,65 @@ def getJsErrorbyDay(request):
             trend[format_date]['jsError'] += js
             trend[format_date]['promiseError'] += 1 - js
 
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+    response = []
+    for key, value in trend.items():
+        response.append({'date': key, **value})
+
+    return JsonResponse(data={'data' : response}, safe=True)
 
 #blank
 def getBlank(request):
-    row = BLANKSCREEN.objects.last()
+    obj = BLANKSCREEN.objects
+    data = 0
+    for item in obj.all():
+        if int(item.emptyPoints) > 16:
+            data += 1
     response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : model_to_dict(row)
+        'data' : data,
     }
     return JsonResponse(data=response_dict, safe=True)
+
+def getBlankbyDay(request):
+    obj = BLANKSCREEN.objects
+    trend = {}
+    for item in obj.all():
+        timestamp = item.timestamp
+        date = time.localtime(int(timestamp) / 1000)
+        format_date = time.strftime('%Y-%m-%d', date)
+        if format_date not in trend:
+            trend[format_date] = 0
+        
+        trend[format_date] += int(int(item.emptyPoints) > 16)
+
+    response = []
+    for key, value in trend.items():
+        response.append({'date': key, 'value': value})
+    
+    return JsonResponse(data={'data': response}, safe=True)
+
+def getBlankbyHour(request):
+    obj = BLANKSCREEN.objects
+    trend = {}
+    for item in obj.all():
+        timestamp = item.timestamp
+        date = time.localtime(int(timestamp) / 1000)
+        day = time.strftime('%Y-%m-%d', date)
+        hour = time.strftime('%H', date)
+        if day not in trend:
+            trend[day] = {}
+            for i in range(24):
+                trend[day][str(i).zfill(2)] = 0
+        
+        trend[day][hour] += int(int(item.emptyPoints) > 16)
+    
+    response = []
+    for day, hours in trend.items():
+        item = {'date' : day, 'data' : []}
+        for hour, value in hours.items():
+            item['data'].append({'hour' : hour + ':00', 'value' : value})
+        response.append(item)
+
+    return JsonResponse(data={'data': response}, safe=True)
 
 #ApiError
 def getApiErrorbyHour(request):
@@ -158,19 +208,11 @@ def getApiErrorbyHour(request):
             trend[day] = {}
             for i in range(24):
                 trend[day][str(i).zfill(2)] = {
-                    'total' : 0, 
-                    'xhr' : {
-                        'total' : 0,
-                        'error' : 0
-                    },
-                    'fetch' : {
-                        'total' : 0,
-                        'error' : 0
-                    }
+                    'xhr' : 0,
+                    'fetch' : 0
                 }
-        trend[day][hour]['total'] += 1
-        trend[day][hour]['xhr']['total'] += 1
-        trend[day][hour]['xhr']['error'] += 1 if item.status != '200-OK' else 0
+
+        trend[day][hour]['xhr'] += 1 if item.status != '200-OK' else 0
     #fetch trend
     for item in obj2.all():
         timestamp = item.timestamp
@@ -181,26 +223,19 @@ def getApiErrorbyHour(request):
             trend[day] = {}
             for i in range(24):
                 trend[day][str(i).zfill(2)] = {
-                    'total' : 0, 
-                    'xhr' : {
-                        'total' : 0,
-                        'error' : 0
-                    },
-                    'fetch' : {
-                        'total' : 0,
-                        'error' : 0
-                    }
+                    'xhr' : 0,
+                    'fetch' : 0
                 }
-        trend[day][hour]['total'] += 1
-        trend[day][hour]['fetch']['total'] += 1
-        trend[day][hour]['fetch']['error'] += 1 if item.success == 'false' else 0
+
+        trend[day][hour]['fetch'] += 1 if item.success == 'false' else 0
     
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+    response = []
+    for day, hours in trend.items():
+        item = {'date' : day, 'data' : []}
+        for hour, value in hours.items():
+            item['data'].append({'hour' : hour + ':00', **value})
+        response.append(item)
+    return JsonResponse(data={'data': response}, safe=True)
 
 def getApiErrorbyDay(request):
     obj1 = xhr.objects
@@ -213,19 +248,11 @@ def getApiErrorbyDay(request):
         format_date = time.strftime('%Y-%m-%d', date)
         if format_date not in trend:
             trend[format_date] = {
-                'total' : 0, 
-                'xhr' : {
-                    'total' : 0,
-                    'error' : 0
-                },
-                'fetch' : {
-                    'total' : 0,
-                    'error' : 0
-                }
+                'xhr' : 0,
+                'fetch' : 0
             }
-        trend[format_date]['total'] += 1
-        trend[format_date]['xhr']['total'] += 1
-        trend[format_date]['xhr']['error'] += 1 if item.status != '200-OK' else 0
+
+        trend[format_date]['xhr'] += 1 if item.status != '200-OK' else 0
     #fetch trend
     for item in obj2.all():
         timestamp = item.timestamp
@@ -233,44 +260,32 @@ def getApiErrorbyDay(request):
         format_date = time.strftime('%Y-%m-%d', date)
         if format_date not in trend:
             trend[format_date] = {
-                'total' : 0, 
-                'xhr' : {
-                    'total' : 0,
-                    'error' : 0
-                },
-                'fetch' : {
-                    'total' : 0,
-                    'error' : 0
-                }
+                'xhr' : 0,
+                'fetch' : 0
             }
-        trend[format_date]['total'] += 1
-        trend[format_date]['fetch']['total'] += 1
-        trend[format_date]['fetch']['error'] += 1 if item.success == 'false' else 0
+        trend[format_date]['fetch'] += 1 if item.success == 'false' else 0
     
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+    response = []
+    for key, value in trend.items():
+        response.append({'date': key, **value})
+
+    return JsonResponse(data={'data': response}, safe=True)
 
 def getApiError(request):
     obj1 = xhr.objects
     obj2 = fetch.objects
 
     response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
         'data' : {
-            'total' : len(obj1.all()),
+            'total' : len(obj1.all()) + len(obj2.all()),
             'xhr' : {
-                'total' : len(obj1.filter(type__exact='xhr')),
-                'error' : len(obj1.filter(type__exact='xhr')) - 
-                          len(obj1.filter(type__exact='xhr', status__exact='200-OK'))
+                'total' : len(obj1.all()),
+                'error' : len(obj1.all()) - 
+                          len(obj1.filter(status__exact='200-OK'))
             },
             'fetch' : {
-               'total' : len(obj2.filter(type__exact='fetch')),
-               'error' : len(obj2.filter(type__exact='fetch', success__exact='false'))
+               'total' : len(obj2.all()),
+               'error' : len(obj2.filter(success__exact='false'))
             }
         }
     }
@@ -283,8 +298,6 @@ def getMean(value_list):
 def getFirstInputDelay(request):
     obj = firstInput.objects
     response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
         'data' : {
             "inputDelay": 0,
             "duration": 0,
@@ -299,8 +312,6 @@ def getFirstInputDelay(request):
 def getTiming(request):
     obj = timing.objects
     response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
         'data' : {
             "connectTime": 0,
             "ttfbTime": 0,
@@ -323,8 +334,6 @@ def getTiming(request):
 def getPaint(request):
     obj = paint.objects
     response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
         'data' : 
             {
                 'firstContentFulPaint' : getMean(obj.values_list('firstContentfulPaint')),
@@ -340,7 +349,7 @@ def getUser(x):
     return x.uuid.split('&&')[0] + x.uuid.split('&&')[1]
 def getUV(request):
     obj = set(map(getUser, list(pv.objects.all())))
-    response_dict = {'code' : 200, 'msg': 'Success!', 'data' : len(obj) }
+    response_dict = {'data' : len(obj) }
     return JsonResponse(data=response_dict, safe=True)
 def getUVbyDay(request):
     obj = pv.objects
@@ -353,15 +362,12 @@ def getUVbyDay(request):
             user[format_date] = []
         user[format_date].append(getUser(item))
     
-    trend = {}
+    response = []
     for key in user.keys():
-        trend[key] = len(set(user[key]))
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+        response.append({'date': key , 'value': len(set(user[key]))})
+
+    return JsonResponse(data={'data': response}, safe=True)
+
 def getUVbyHour(request):
     obj = pv.objects
     user = {}
@@ -375,26 +381,20 @@ def getUVbyHour(request):
             for i in range(24):
                 user[day][str(i).zfill(2)] = []
         user[day][hour].append(getUser(item))
-    
-    trend = {}
-    for day in user.keys():
-        trend[day] = {}
-        for hour in user[day].keys():
-            trend[day][hour] = len(set(user[day][hour]))
-    
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+
+    response = []
+    for day, hours in user.items():
+        item = {'date' : day, 'data' : []}
+        for hour, value in hours.items():
+            item['data'].append({'hour' : hour + ':00', 'value': len(set(value))})
+        response.append(item)
+
+    return JsonResponse(data={'data': response}, safe=True)
 
 #pv
-
-
 def getPV(request):
     obj = pv.objects.all()
-    response_dict = {'code' : 200, 'msg': 'Success!', 'data' : len(obj) }
+    response_dict = {'data' : len(obj) }
     return JsonResponse(data=response_dict, safe=True)
 def getPVbyDay(request):
     obj = pv.objects
@@ -407,12 +407,11 @@ def getPVbyDay(request):
             trend[format_date] = 0
         trend[format_date] += 1
 
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+    response = []
+    for key, value in trend.items():
+        response.append({'date': key, 'value': value})
+    
+    return JsonResponse(data={'data': response}, safe=True)
 
 def getPVbyHour(request):
     obj = pv.objects
@@ -429,19 +428,19 @@ def getPVbyHour(request):
         
         trend[day][hour] += 1
 
-    response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
-        'data' : trend
-    }
-    return JsonResponse(data=response_dict, safe=True)
+    response = []
+    for day, hours in trend.items():
+        item = {'date' : day, 'data' : []}
+        for hour, value in hours.items():
+            item['data'].append({'hour' : hour + ':00', 'value' : value})
+        response.append(item)
+
+    return JsonResponse(data={'data': response}, safe=True)
 
 def getStaytime(request):
     obj = stayTime.objects.values_list('stayTime')
     all = list(map(lambda x: float(x[0]), obj))
     response_dict = {
-        'code' : 200, 
-        'msg': 'Success!', 
         'data' : {
             'min' : min(all),
             'max' : max(all),
@@ -450,3 +449,28 @@ def getStaytime(request):
         }
     }
     return JsonResponse(data=response_dict, safe=True)
+
+def getStaytimeCharts(request):
+    obj = stayTime.objects.values_list('stayTime')
+    all = list(map(lambda x: float(x[0]), obj))
+    response = [
+        {'type': '<5s', 'value' : 0},
+        {'type': '5s~60s', 'value' : 0},
+        {'type': '1min~5min', 'value' : 0},
+        {'type': '5min~15min', 'value' : 0},
+        {'type': '>15min', 'value': 0},
+    ]
+    for item in all:
+        item /= 1000
+        if item < 5:
+            response[0]['value'] += 1
+        elif item < 60:
+            response[1]['value'] += 1
+        elif item / 60 < 5:
+            response[2]['value'] += 1
+        elif item /60 < 15:
+            response[3]['value'] += 1
+        else:
+            response[4]['value'] += 1
+
+    return JsonResponse(data={'data': response}, safe=True)

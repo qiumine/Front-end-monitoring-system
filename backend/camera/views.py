@@ -32,7 +32,7 @@ def getdata(request):
         elif Type == 'paint':
             return savedata_paint(request)
         elif Type == 'fetch':
-            return savedata_pv(request)
+            return savedata_fetch(request)
         elif Type == 'stayTime':
             return savedata_stayTime(request)
         elif Type == 'pv':

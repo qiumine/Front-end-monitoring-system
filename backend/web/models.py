@@ -83,7 +83,7 @@ class fetch(models.Model):
     duration = models.CharField(max_length=30)
     status = models.CharField(max_length=100)
     success = models.CharField(max_length=30)
-    response = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
     timestamp = models.CharField(max_length=30,default=0)
 
 
