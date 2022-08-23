@@ -56,7 +56,7 @@ export default {
       width: 100%;
       aspect-ratio: 2/1;
       background-color: #fff;
-      border-radius: 10%;
+      border-radius: 25px;
       display: flex;
       align-items: center;
       justify-content: center;
