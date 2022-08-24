@@ -53,7 +53,7 @@ export default {
 
     .circle {
       // border: 2px solid #000;
-      width: 75%;
+      width: 100%;
       aspect-ratio: 1/1;
       border-radius: 50%;
       margin: 20px 0;

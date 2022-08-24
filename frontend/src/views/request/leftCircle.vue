@@ -4,23 +4,7 @@
  
 <script>
 import { Pie } from '@antv/g2plot'
-let chartChange
 export default {
-    // props: {
-    //     value: {
-    //         default() {
-    //             return [
-    //                 { type: "xhr成功", value: 50 },
-    //                 { type: "fecth成功", value: 25 },
-    //                 { type: "失败", value: 25 },
-    //             ]
-    //         },
-    //     },
-    //     Height: {
-    //         type: Number,
-    //         default: 0,
-    //     },
-    // },
     data() {
         return {
             piePlot: "",
@@ -35,7 +19,6 @@ export default {
     methods: {
         init() {
             this.getApiErrorCharts();
-            this.paint();
         },
         getApiErrorCharts() {
             fetch("http://127.0.0.1:8000/getApiErrorCharts/")
@@ -48,15 +31,15 @@ export default {
                 .finally(() => this.paint());
         },
         paint() {
-            chartChange = new Pie("circle", {
+            this.chartChange = new Pie("circle", {
                 data: this.data,
                 appendPadding: 10,
                 angleField: 'value',
                 colorField: 'type',
-                radius: 1,
+                radius: .6,
                 label: {
                     type: 'outer',
-                    content: '{name}-占比{percentage}',
+                    content: '{name}-{percentage}',
                     style: {
                         fill: '#000',
                     },
@@ -66,8 +49,8 @@ export default {
                     { type: 'pie-legend-active' },
                     { type: 'element-active' },
                 ],
-            })
-            chartChange.render();
+            });
+            this.chartChange.render();
         },
     },
     created() {
@@ -77,8 +60,8 @@ export default {
 </script>
 <style scoped>
 #circle {
-    width: 95%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
     left: 2%;
     position: relative;
 }
