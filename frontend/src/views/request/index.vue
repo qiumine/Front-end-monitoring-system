@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <div class="left">
-      <div class="circle"></div>
+      <div class="circle">
+        <LeftCircle></LeftCircle>
+      </div>
+
       <h3>成功率</h3>
     </div>
     <div class="right">
@@ -12,8 +15,14 @@
 </template>
 
 <script>
+import LeftCircle from "./leftCircle.vue";
+
 export default {
   name: "Request",
+  components: {
+    LeftCircle
+  },
+  methods: {},
 };
 </script>
 
@@ -26,12 +35,14 @@ export default {
   background-color: #e9eef3;
   overflow: hidden;
   text-align: center;
+
   .left,
   .right {
     width: 50%;
     height: 100%;
     margin: 0 10px;
   }
+
   .left {
     background-color: #fff;
     border-radius: 15%;
@@ -39,19 +50,22 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     .circle {
-      border: 2px solid #000;
+      // border: 2px solid #000;
       width: 75%;
       aspect-ratio: 1/1;
       border-radius: 50%;
       margin: 20px 0;
     }
   }
+
   .right {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+
     .small {
       width: 100%;
       aspect-ratio: 2/1;
