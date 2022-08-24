@@ -16,8 +16,8 @@ export default {
   },
   computed: {},
   methods: {
-    init() {
-      this.getUVbyDay();
+    async init() {
+      await this.getUVbyDay();
       this.paint();
     },
     getUVbyDay() {
@@ -25,6 +25,7 @@ export default {
         .then((res) => res.json())
         .then((json) => {
           this.data = json.data;
+          this.paint();
         })
         .catch((err) => console.log("getUVbyDay Failed", err));
     },
@@ -43,10 +44,7 @@ export default {
     },
   },
   created() {
-    this.getUVbyDay();
-  },
-  mounted() {
-    this.paint();
+    this.init();
   },
 };
 </script>

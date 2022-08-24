@@ -16,11 +16,16 @@ export default {
   },
   computed: {},
   methods: {
+    async init() {
+      await this.getPVbyDay();
+      this.paint();
+    },
     getPVbyDay() {
       fetch("http://127.0.0.1:8000/getPVbyDay/")
         .then((res) => res.json())
         .then((json) => {
           this.data = json.data;
+          this.paint();
         })
         .catch((err) => console.log("getPVbyDay Failed", err));
     },
@@ -39,10 +44,7 @@ export default {
     },
   },
   created() {
-    this.getPVbyDay();
-  },
-  mounted() {
-    this.paint();
+    this.init();
   },
 };
 </script>

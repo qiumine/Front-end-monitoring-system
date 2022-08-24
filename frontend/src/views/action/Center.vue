@@ -19,11 +19,16 @@ export default {
   },
   computed: {},
   methods: {
+    async init() {
+      await this.getStaytimeCharts();
+      this.paint();
+    },
     getStaytimeCharts() {
       fetch("http://127.0.0.1:8000/getStaytimeCharts/")
         .then((res) => res.json())
         .then((json) => {
           this.data = json.data;
+          this.paint();
         })
         .catch((err) => console.log("getStaytimeCharts Failed", err));
     },
@@ -49,10 +54,7 @@ export default {
     },
   },
   created() {
-    this.getStaytimeCharts();
-  },
-  mounted() {
-    this.paint();
+    this.init();
   },
 };
 </script>
