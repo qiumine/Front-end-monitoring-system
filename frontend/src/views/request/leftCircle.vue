@@ -26,17 +26,17 @@ export default {
     },
     methods: {
         async init() {
-            await this.getApiError();
+            await this.getApiErrorCharts();
             this.paint();
         },
-        getApiError() {
-            fetch("http://127.0.0.1:8000/getApiError/")
+        getApiErrorCharts() {
+            fetch("http://127.0.0.1:8000/getApiErrorCharts/")
                 .then((res) => res.json())
                 .then((json) => {
                     this.value = json.data;
                     this.paint();
                 })
-                .catch((err) => console.log("getApiError Failed", err));
+                .catch((err) => console.log("getApiErrorCharts Failed", err));
         },
         paint() {
             chartChange = new Pie("circle", {
