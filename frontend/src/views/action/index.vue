@@ -39,8 +39,8 @@
         <div class="small">
           <div class="first">
             <div>
-              <h3>{{ this.TP }}</h3>
-              <span>TP页面停留时间</span>
+              <h3>{{ this.TP.average }}</h3>
+              <span>TP页面停留时间(平均值)</span>
             </div>
           </div>
         </div>
@@ -49,14 +49,13 @@
     <div class="main">
       <div class="left">
         <div class="title">
-          <span>待改</span>
+          <span>PV趋势图</span>
         </div>
-
         <MainLeft></MainLeft>
       </div>
       <div class="right">
         <div class="title">
-          <span>待改</span>
+          <span>UV趋势图</span>
         </div>
         <div class="vue-container"><MainRight></MainRight></div>
       </div>
@@ -80,13 +79,19 @@ export default {
       newVisitor: 0,
       PV: 0,
       UV: 0,
-      TP: 0,
+      TP: {
+        min: 0, //最小值
+        max: 0, //最大值
+        average: 0, //平均值
+        all: [0], //全部值
+      },
     };
   },
   methods: {
     getData() {
       this.getPV();
       this.getUV();
+      this.getStaytime();
     },
     getPV() {
       fetch("http://127.0.0.1:8000/getPV/")
@@ -103,6 +108,14 @@ export default {
           this.UV = json.data;
         })
         .catch((err) => console.log("getUV Failed", err));
+    },
+    getStaytime() {
+      fetch("http://127.0.0.1:8000/getStaytime/")
+        .then((res) => res.json())
+        .then((json) => {
+          this.TP = json.data;
+        })
+        .catch((err) => console.log("getStaytime Failed", err));
     },
   },
   created() {
@@ -174,10 +187,14 @@ export default {
     margin: 0 0.5%;
     border-radius: 5px;
     background-color: #fff;
+    .title span {
+      margin: 10px;
+    }
   }
 }
 .vue-container {
   width: 100%;
   height: 100%;
+  margin: 10px;
 }
 </style>

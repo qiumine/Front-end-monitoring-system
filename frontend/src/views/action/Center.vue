@@ -19,10 +19,6 @@ export default {
   },
   computed: {},
   methods: {
-    init() {
-      this.getStaytimeCharts();
-      this.paint();
-    },
     getStaytimeCharts() {
       fetch("http://127.0.0.1:8000/getStaytimeCharts/")
         .then((res) => res.json())
@@ -52,8 +48,11 @@ export default {
       this.piePlot.render();
     },
   },
+  created() {
+    this.getStaytimeCharts();
+  },
   mounted() {
-    this.init();
+    this.paint();
   },
 };
 </script>

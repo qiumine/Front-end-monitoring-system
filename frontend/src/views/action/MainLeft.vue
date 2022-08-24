@@ -9,53 +9,40 @@ export default {
     return {
       line: "",
       data: [
-        {
-          Date: "2010-01",
-          scales: 1998,
-        },
-        {
-          Date: "2010-02",
-          scales: 1850,
-        },
-        {
-          Date: "2010-03",
-          scales: 1720,
-        },
-        {
-          Date: "2010-04",
-          scales: 1818,
-        },
+        { date: "2022-08-22", value: 0 },
+        { date: "2022-08-23", value: 0 },
       ],
     };
   },
   computed: {},
   methods: {
-    init() {
-      //待改
-      fetch(
-        "https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json"
-      )
+    getPVbyDay() {
+      fetch("http://127.0.0.1:8000/getPVbyDay/")
         .then((res) => res.json())
-        .then((data) => {
-          this.line = new Line("mainLeft", {
-            data: this.data,
-            padding: "auto",
-            xField: "Date",
-            yField: "scales",
-            xAxis: {
-              // type: 'timeCat',
-              tickCount: 5,
-            },
-          });
-          this.line.render();
-        });
+        .then((json) => {
+          this.data = json.data;
+        })
+        .catch((err) => console.log("getPVbyDay Failed", err));
+    },
+    paint() {
+      this.line = new Line("mainLeft", {
+        data: this.data,
+        padding: "auto",
+        xField: "date",
+        yField: "value",
+        xAxis: {
+          // type: 'timeCat',
+          tickCount: 5,
+        },
+      });
+      this.line.render();
     },
   },
   created() {
-    // this.init();
+    this.getPVbyDay();
   },
   mounted() {
-    this.init();
+    this.paint();
   },
 };
 </script>
@@ -63,7 +50,8 @@ export default {
 #mainLeft {
   width: 95%;
   height: 80%;
-  left: 2%;
+  left: 2.5%;
+  top: 10%;
   position: relative;
 }
 </style>

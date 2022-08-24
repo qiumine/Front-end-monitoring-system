@@ -8,40 +8,54 @@ export default {
   data() {
     return {
       line: "",
+      data: [
+        { date: "2022-08-22", value: 0 },
+        { date: "2022-08-23", value: 0 },
+      ],
     };
   },
   computed: {},
   methods: {
     init() {
-      //待改
-      fetch(
-        "https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json"
-      )
+      this.getUVbyDay();
+      this.paint();
+    },
+    getUVbyDay() {
+      fetch("http://127.0.0.1:8000/getUVbyDay/")
         .then((res) => res.json())
-        .then((data) => {
-          this.line = new Line("mainRight", {
-            data,
-            padding: "auto",
-            xField: "Date",
-            yField: "scales",
-            xAxis: {
-              // type: 'timeCat',
-              tickCount: 5,
-            },
-          });
-          this.line.render();
-        });
+        .then((json) => {
+          this.data = json.data;
+        })
+        .catch((err) => console.log("getUVbyDay Failed", err));
+    },
+    paint() {
+      this.line = new Line("mainRight", {
+        data: this.data,
+        padding: "auto",
+        xField: "date",
+        yField: "value",
+        xAxis: {
+          // type: 'timeCat',
+          tickCount: 5,
+        },
+      });
+      this.line.render();
     },
   },
   created() {
-    this.init();
+    this.getUVbyDay();
   },
-  mounted() {},
+  mounted() {
+    this.paint();
+  },
 };
 </script>
 <style scoped>
 #mainRight {
-  width: 100%;
-  height: 90%;
+  width: 95%;
+  height: 80%;
+  left: 2.5%;
+  top: 10%;
+  position: relative;
 }
 </style>
