@@ -4,7 +4,6 @@
 
 <script>
 import { Line } from "@antv/g2plot";
-// import { mapState } from "vuex";
 export default {
   data() {
     return {

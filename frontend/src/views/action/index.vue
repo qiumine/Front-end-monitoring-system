@@ -5,24 +5,16 @@
         <div class="small">
           <div class="first">
             <div>
-              <h3>8</h3>
-              <span>JS错误数</span>
-            </div>
-            <div>
-              <h3>1.52%</h3>
-              <span>JS错误率</span>
+              <h3>{{ this.PV }}</h3>
+              <span>浏览量(PV)</span>
             </div>
           </div>
         </div>
         <div class="small">
           <div class="first">
             <div>
-              <h3>0</h3>
-              <span>API错误数</span>
-            </div>
-            <div>
-              <h3>100%</h3>
-              <span>API请求成功率</span>
+              <h2>{{ this.newVisitor }}</h2>
+              <span>新访客</span>
             </div>
           </div>
         </div>
@@ -39,16 +31,16 @@
         <div class="small">
           <div class="first">
             <div>
-              <h3>938ms</h3>
-              <span>首次渲染耗时</span>
+              <h3>{{ this.UV }}</h3>
+              <span>访客数(UV)</span>
             </div>
           </div>
         </div>
         <div class="small">
           <div class="first">
             <div>
-              <h3>732</h3>
-              <span>资源错误</span>
+              <h3>{{ this.TP }}</h3>
+              <span>TP页面停留时间</span>
             </div>
           </div>
         </div>
@@ -82,7 +74,39 @@ export default {
     MainLeft,
     MainRight,
   },
-  methods: {},
+  data() {
+    return {
+      newVisitor: 0,
+      PV: 0,
+      UV: 0,
+      TP: 0,
+    };
+  },
+  methods: {
+    getData() {
+      this.getPV();
+      this.getUV();
+    },
+    getPV() {
+      fetch("http://127.0.0.1:8000/getPV/")
+        .then((res) => res.json())
+        .then((json) => {
+          this.PV = json.data;
+        })
+        .catch((err) => console.log("getPV Failed", err));
+    },
+    getUV() {
+      fetch("http://127.0.0.1:8000/getUV/")
+        .then((res) => res.json())
+        .then((json) => {
+          this.UV = json.data;
+        })
+        .catch((err) => console.log("getUV Failed", err));
+    },
+  },
+  created() {
+    this.getData();
+  },
 };
 </script>
 
