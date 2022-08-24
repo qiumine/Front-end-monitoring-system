@@ -89,8 +89,8 @@ export default {
       },
       line: "",
       data: [
-        { date: "2022-08-22", value: 1 },
-        { date: "2022-08-23", value: 3 },
+        { date: "2022-08-22", value: 0 },
+        { date: "2022-08-23", value: 0 },
       ],
     };
   },
