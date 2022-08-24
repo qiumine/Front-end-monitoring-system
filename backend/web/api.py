@@ -13,14 +13,20 @@ from statistics import mean
 
 #Errors
 def getErrors(request):
+    obj = BLANKSCREEN.objects
+    data = 0
+    for item in obj.all():
+        if int(item.emptyPoints) > 16:
+            data += 1
     response = [
         {'type' : 'resource error', 'value' : len(resourceError.objects.all())},
         {'type' : 'js error', 'value' : len(jsError.objects.filter(errorType__exact='jsError'))},
         {'type' : 'promise error', 'value' : len(jsError.objects.filter(errorType__exact='promiseError'))},
-        {'type' : 'xhr error', 'value' : len(xhr.objects.all()) - len(xhr.filter(status__exact='200-OK'))},
-        {'type' : 'fetch error', 'value' : len(fetch.objects.filter(success__exact='false'))}
+        {'type' : 'xhr error', 'value' : len(xhr.objects.all()) - len(xhr.objects.filter(status__exact='200-OK'))},
+        {'type' : 'fetch error', 'value' : len(fetch.objects.filter(success__exact='false'))},
+        {'type' : 'blank error', 'value' : data}
     ]
-    return JsonResponse(data=response, safe=True)
+    return JsonResponse(data={'data': response}, safe=True)
 
 #ResourceError
 def getResourceError(request):
@@ -134,8 +140,9 @@ def getJsErrorbyDay(request):
             trend[format_date]['promiseError'] += 1 - js
 
     response = []
-    for key, value in trend.items():
-        response.append({'date': key, **value})
+    for key, data in trend.items():
+        for kind, value in data.items():
+            response.append({'date': key, 'kind': kind, 'value': value})
 
     return JsonResponse(data={'data' : response}, safe=True)
 
@@ -266,8 +273,9 @@ def getApiErrorbyDay(request):
         trend[format_date]['fetch'] += 1 if item.success == 'false' else 0
     
     response = []
-    for key, value in trend.items():
-        response.append({'date': key, **value})
+    for key, data in trend.items():
+        for kind, value in data.items():
+            response.append({'date': key, 'kind': kind, 'value': value})
 
     return JsonResponse(data={'data': response}, safe=True)
 

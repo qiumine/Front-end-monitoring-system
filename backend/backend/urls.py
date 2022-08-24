@@ -21,6 +21,8 @@ from web import api
 
 urlpatterns = [
     url(r'^senddata/$', views.getdata, name='senddata'),
+
+    url(r'^getErrors/$', api.getErrors, name='getErrors'),
     #resourceError
     url(r'^getResourceError/$', api.getResourceError, name='getResourceError'),
     url(r'^getResourceErrorbyDay/$', api.getResourceErrorbyDay, name='getResourceErrorbyDay'),

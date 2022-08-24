@@ -2,28 +2,195 @@
   <div class="container">
     <div class="header">
       <div class="sum">
-        <div class="circle">综合性能</div>
+        <div id="Errors"></div>
       </div>
       <div class="right">
-        <div class="circle">JS异常</div>
-        <div class="circle">白屏异常</div>
-        <div class="circle">接口异常</div>
-        <div class="circle">资源异常</div>
+        <div class="circle">
+          JS异常: {{ JsError.total }}
+        </div>
+        <div class="circle">
+          白屏异常: {{ blank }}
+        </div>
+        <div class="circle">
+          接口异常: {{ apiError }}
+        </div>
+        <div class="circle">
+          资源异常: {{ resourceError }}
+        </div>
       </div>
     </div>
     <div class="main">
-      <div class="small">JS异常趋势图</div>
-      <div class="small">白屏异常趋势图</div>
-      <div class="small">接口异常趋势图</div>
-      <div class="small">性能异常趋势图</div>
+      <div id="jsTrend" class="small">JS异常趋势图</div>
+      <div id="blankTrend" class="small">白屏异常趋势图</div>
+      <div id="apiTrend" class="small">接口异常趋势图</div>
+      <div id="resourceTrend" class="small">资源异常趋势图</div>
     </div>
   </div>
 </template>
 
 <script>
+import { Line } from '@antv/g2plot'
+import { Pie } from '@antv/g2plot'
 export default {
-  name: "Abnormal",
-};
+  data() {
+    return {
+      JsError: {},
+      apiError: {},
+      blank: 0,
+      resourceError: 0
+    }
+  },
+  created() {
+    this.getData()
+  },
+  methods: {
+    getData() {
+      this.getErrors()
+      this.getJsError()
+      this.getBlank()
+      this.getApiError()
+      this.getResourceError()
+      this.getTrend()
+    },
+    getTrend() {
+      fetch(
+        'http://127.0.0.1:8000/getJsErrorbyDay/'
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.line = new Line('jsTrend', {
+            data: data.data,
+            padding: 'auto',
+            xField: 'date',
+            yField: 'value',
+            seriesField: 'kind',
+            xAxis: {
+              tickCount: 5
+            }
+          })
+          this.line.render()
+        })
+      fetch(
+        'http://127.0.0.1:8000/getBlankbyDay/'
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.line = new Line('blankTrend', {
+            data: data.data,
+            padding: 'auto',
+            xField: 'date',
+            yField: 'value',
+            xAxis: {
+              tickCount: 5
+            }
+          })
+          this.line.render()
+        })
+      fetch(
+        'http://127.0.0.1:8000/getResourceErrorbyDay/'
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.line = new Line('resourceTrend', {
+            data: data.data,
+            padding: 'auto',
+            xField: 'date',
+            yField: 'value',
+            xAxis: {
+              tickCount: 5
+            }
+          })
+          this.line.render()
+        })
+      fetch(
+        'http://127.0.0.1:8000/getApiErrorbyDay/'
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.line = new Line('apiTrend', {
+            data: data.data,
+            padding: 'auto',
+            xField: 'date',
+            yField: 'value',
+            seriesField: 'kind',
+            xAxis: {
+              tickCount: 5
+            }
+          })
+          this.line.render()
+        })
+    },
+    getErrors() {
+      fetch('http://127.0.0.1:8000/getErrors/')
+        .then((res) => res.json())
+        .then((data) => {
+          this.piePlot = new Pie('Errors', {
+            appendPadding: 20,
+            data: data.data,
+            angleField: 'value',
+            colorField: 'type',
+            radius: 1,
+            innerRadius: 0.6,
+            label: {
+              type: 'inner',
+              offset: '-50%',
+              content: '{value}',
+              style: {
+                textAlign: 'center',
+                fontSize: 14
+              }
+            },
+            interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
+            statistic: {
+              title: false,
+              content: {
+                style: {
+                  whiteSpace: 'pre-wrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                },
+                content: '总览'
+              }
+            }
+          })
+          this.piePlot.render()
+        })
+        .catch((err) => console.log('getErrors Failed', err))
+    },
+    getJsError() {
+      fetch('http://127.0.0.1:8000/getJsError/')
+        .then((res) => res.json())
+        .then((json) => {
+          this.JsError = json.data
+        })
+        .catch((err) => console.log('getJsError Failed', err))
+    },
+    getBlank() {
+      fetch('http://127.0.0.1:8000/getBlank/')
+        .then((res) => res.json())
+        .then((json) => {
+          this.blank = json.data
+        })
+        .catch((err) => console.log('getBlank Failed', err))
+    },
+    getApiError() {
+      fetch('http://127.0.0.1:8000/getApiError/')
+        .then((res) => res.json())
+        .then((json) => {
+          this.apiError = json.data.xhr.error + json.data.fetch.error
+        })
+        .catch((err) => console.log('getApiError Failed', err))
+    },
+    getResourceError() {
+      fetch('http://127.0.0.1:8000/getResourceError/')
+        .then((res) => res.json())
+        .then((json) => {
+          this.resourceError = json.data
+        })
+        .catch((err) => console.log('getResourceError Failed', err))
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -50,15 +217,6 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      .circle {
-        border: 2px solid #000;
-        border-radius: 50%;
-        height: 75%;
-        aspect-ratio: 1/1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
     }
     .right {
       flex: 1;
