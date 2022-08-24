@@ -11,17 +11,17 @@
       </div>
       <div class="small" title="DOM Content Loaded Time">
         <h2>DOM Ready:</h2>
-        <h1>{{this.DOM}}s</h1>
+        <h1>{{this.DOM}}ms</h1>
       </div>
     </div>
     <div class="header">
       <div class="small" title="发起请求到第一个字节到达的时间">
         <h2>ttfbtime:</h2>
-        <h1>{{this.ttfb}}s</h1>
+        <h1>{{this.ttfb}}ms</h1>
       </div>
       <div class="small" title="接口响应时间">
         <h2>responsetime:</h2>
-        <h1>{{this.responsetime}}s</h1>
+        <h1>{{this.responsetime}}ms</h1>
       </div>
       <div class="small" title="页面加载完成的总时间">
         <h2>load time:</h2>
