@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^getBlankbyHour/$', api.getBlankbyHour, name='getBlankbyHour'),
     #ApiError
     url(r'^getApiError/$', api.getApiError, name='getApiError'),
+    url(r'^getApiErrorCharts/$', api.getApiErrorCharts, name='getApiErrorCharts'),
     url(r'^getApiErrorbyDay/$', api.getApiErrorbyDay, name='getApiErrorbyDay'),
     url(r'^getApiErrorbyHour/$', api.getApiErrorbyHour, name='getApiErrorbyHour'),
     #firstInput

@@ -299,6 +299,19 @@ def getApiError(request):
     }
     return JsonResponse(data=response_dict, safe=True)
 
+def getApiErrorCharts(request):
+    obj1 = xhr.objects
+    obj2 = fetch.objects
+    response_dict = {
+        'data' : [
+            {'type': 'xhr成功', 'value': len(obj1.filter(status__exact='200-OK'))},
+            {'type': 'fetch成功', 'value': len(obj2.filter(success__exact='true'))},
+            {'type': '失败', 'value': 
+                len(obj2.filter(success__exact='false')) + len(obj1.all()) - len(obj1.filter(status__exact='200-OK'))}
+        ]
+    }
+    return JsonResponse(data=response_dict, safe=True)
+
 def getMean(value_list):
     return mean(list(map(lambda x: 0 if x[0] == '' else float(x[0]), value_list)))
 

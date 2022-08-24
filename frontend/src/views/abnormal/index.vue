@@ -5,18 +5,30 @@
         <div id="Errors"></div>
       </div>
       <div class="right">
-        <div class="circle">
-          JS异常: {{ JsError.total }}
-        </div>
-        <div class="circle">
-          白屏异常: {{ blank }}
-        </div>
-        <div class="circle">
-          接口异常: {{ apiError }}
-        </div>
-        <div class="circle">
-          资源异常: {{ resourceError }}
-        </div>
+        <a class="circle">
+          <p>
+            JS异常: {{ JsError.total }}
+            <br>
+          </p>
+        </a>
+        <a class="circle">
+          <p>
+            白屏异常: {{ blank }}
+            <br>
+          </p>
+        </a>
+        <a class="circle">
+          <p>
+            接口异常: {{ apiError }}
+            <br>
+          </p>
+        </a>
+        <a class="circle">
+          <p>
+            资源异常: {{ resourceError }}
+            <br>
+          </p>
+        </a>
       </div>
     </div>
     <div class="main">
@@ -129,7 +141,7 @@ export default {
             data: data.data,
             angleField: 'value',
             colorField: 'type',
-            radius: 1,
+            radius: 0.7,
             innerRadius: 0.6,
             label: {
               type: 'inner',
@@ -137,7 +149,7 @@ export default {
               content: '{value}',
               style: {
                 textAlign: 'center',
-                fontSize: 14
+                fontSize: 10
               }
             },
             interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
@@ -208,12 +220,10 @@ export default {
     background: #fff;
     margin: 20px 10px;
     border-radius: 20px;
-    border: 1px solid #000;
     display: flex;
     .sum {
       width: 25%;
       height: 100%;
-      border-right: 1px solid #000;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -225,12 +235,18 @@ export default {
       align-items: center;
       .circle {
         border: 2px solid red;
+        font-weight: bold;
         border-radius: 50%;
         aspect-ratio: 1/1;
         height: 60%;
         display: flex;
-        justify-content: space-evenly;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
+      }
+      .circle:hover{
+        background-color: rgb(255, 115, 0);
+        color: #fff;
       }
     }
   }
@@ -245,12 +261,11 @@ export default {
       height: 30vh;
       background-color: #fff;
       border-radius: 25px;
-      border: 1px solid #000;
       display: flex;
       justify-content: center;
       align-items: center;
       margin: 2vh 1vw;
-      padding: 0;
+      padding: 20px;
     }
   }
 }
