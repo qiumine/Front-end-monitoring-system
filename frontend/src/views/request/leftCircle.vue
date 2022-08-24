@@ -1,76 +1,59 @@
 <template>
-    <div id="circle" ref="PieChart"></div>
+    <div id="circle"></div>
 </template>
  
 <script>
 import { Pie } from '@antv/g2plot'
 let chartChange
 export default {
-    props: {
-        value: {
-            default() {
-                return [
-                    { type: 'xhr成功', value: 50 },
-                    { type: 'fecth成功', value: 25 },
-                    { type: '失败', value: 25 },
-                ]
-            },
-        },
-        Height: {
-            type: Number,
-            default: 0,
-        },
+    // props: {
+    //     value: {
+    //         default() {
+    //             return [
+    //                 { type: "xhr成功", value: 50 },
+    //                 { type: "fecth成功", value: 25 },
+    //                 { type: "失败", value: 25 },
+    //             ]
+    //         },
+    //     },
+    //     Height: {
+    //         type: Number,
+    //         default: 0,
+    //     },
+    // },
+    data() {
+        return {
+            piePlot: "",
+            data: [
+                { type: "xhr成功", value: 50 },
+                { type: "fecth成功", value: 25 },
+                { type: "失败", value: 25 },
+            ],
+        };
     },
-    mounted() {
-        this.init()
-    },
+    computed: {},
     methods: {
-        async init() {
-            await this.getApiErrorCharts();
+        init() {
+            this.getApiErrorCharts();
             this.paint();
         },
         getApiErrorCharts() {
             fetch("http://127.0.0.1:8000/getApiErrorCharts/")
                 .then((res) => res.json())
                 .then((json) => {
-                    this.value = json.data;
+                    this.data = json.data;
                     this.paint();
                 })
-                .catch((err) => console.log("getApiErrorCharts Failed", err));
+                .catch((err) => console.log("getApiErrorCharts Failed", err))
+                .finally(() => this.paint());
         },
         paint() {
             chartChange = new Pie("circle", {
-                data: this.value,
-                height: this.Height,
+                data: this.data,
                 appendPadding: 10,
                 angleField: 'value',
                 colorField: 'type',
                 radius: 1,
-                // innerRadius: 0.64,   //圆环
-                meta: {
-                    value: {
-                        formatter: (v) => `% ${v}`,
-                    },
-                },
-                legend: {
-                    ayout: 'vertical',
-                    position: 'right',
-                    flipPage: true,
-                    offsetX: 0,
-                    // title: {
-                    //     text: '标题',
-                    //     spacing: 8,
-                    // },
-                    itemValue: {
-                        formatter: (text, item) => {
-                            const items = this.value.filter((d) => d.type === item.value)
-                            return items.length ? items.reduce((a, b) => a + b.value, 0) / items.length + '%' : '-'
-                        },
-                        style: {
-                            opacity: 0.65,
-                        },
-                    },
-                },
                 label: {
                     type: 'outer',
                     content: '{name}-占比{percentage}',
@@ -87,5 +70,16 @@ export default {
             chartChange.render();
         },
     },
+    created() {
+        this.init();
+    },
 }
 </script>
+<style scoped>
+#circle {
+    width: 95%;
+    height: 80%;
+    left: 2%;
+    position: relative;
+}
+</style>
