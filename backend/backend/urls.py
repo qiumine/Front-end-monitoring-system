@@ -21,7 +21,11 @@ from web import api
 
 urlpatterns = [
     url(r'^senddata/$', views.getdata, name='senddata'),
-
+    #info
+    url(r'^getResourceErrorInfo/$', api.getResourceErrorInfo, name='getResourceErrorInfo'),
+    url(r'^getJsErrorInfo/$', api.getJsErrorInfo, name='getJsErrorInfo'),
+    url(r'^getBlankErrorInfo/$', api.getBlankErrorInfo, name='getBlankErrorInfo'),
+    url(r'^getApiErrorInfo/$', api.getApiErrorInfo, name='getApiErrorInfo'),
     url(r'^getErrors/$', api.getErrors, name='getErrors'),
     #resourceError
     url(r'^getResourceError/$', api.getResourceError, name='getResourceError'),

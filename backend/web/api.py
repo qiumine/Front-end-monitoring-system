@@ -1,12 +1,7 @@
-import json
-from optparse import Values
-from urllib import response
-from django.shortcuts import render
-from django.views.decorators import csrf
-from django.http import HttpResponse, JsonResponse
+from heapq import merge
+from django.http import JsonResponse
 from web.models import BLANKSCREEN, pv, stayTime
 from web.models import resourceError,jsError,firstInput,timing,paint,xhr,fetch
-from django.forms.models import model_to_dict
 import time
 
 from statistics import mean
@@ -78,6 +73,16 @@ def getResourceErrorbyHour(request):
 
     return JsonResponse(data={'data': response}, safe=True)
 
+def getResourceErrorInfo(request): 
+    obj = resourceError.objects.values_list('errorType', 'filename', 'timestamp')
+    response = []
+    for item in obj:
+        timestamp = item[2]
+        date = time.localtime(int(timestamp) / 1000)
+        t = time.strftime('%Y-%m-%d %H:%M:%S', date)
+        response.append( {'time' : t, 'type': item[0], 'message' : item[1]} )
+    return JsonResponse(data={'data': list(reversed(response))}, safe=True)
+
 #JsError
 def getJsError(request):
     obj = jsError.objects
@@ -146,6 +151,16 @@ def getJsErrorbyDay(request):
 
     return JsonResponse(data={'data' : response}, safe=True)
 
+def getJsErrorInfo(request): 
+    obj = jsError.objects.values_list('errorType', 'message', 'stack', 'timestamp')
+    response = []
+    for item in obj:
+        timestamp = item[3]
+        date = time.localtime(int(timestamp) / 1000)
+        t = time.strftime('%Y-%m-%d %H:%M:%S', date)
+        response.append( {'time': t, 'type' : item[0], 'message' : item[1], 'stack' : item[2]})
+    return JsonResponse(data={'data': list(reversed(response))}, safe=True)
+
 #blank
 def getBlank(request):
     obj = BLANKSCREEN.objects
@@ -200,6 +215,16 @@ def getBlankbyHour(request):
 
     return JsonResponse(data={'data': response}, safe=True)
 
+def getBlankErrorInfo(request): 
+    obj = BLANKSCREEN.objects.values_list('emptyPoints', 'timestamp')
+    response = []
+    for item in obj:
+        timestamp = item[1]
+        date = time.localtime(int(timestamp) / 1000)
+        t = time.strftime('%Y-%m-%d %H:%M:%S', date)
+        if int(item[0]) > 16:
+            response.append( {'time': t , 'type': 'BlankError', 'message': '页面空点数为' + item[0] + '(> 16)'} )
+    return JsonResponse(data={'data': list(reversed(response))}, safe=True)
 #ApiError
 def getApiErrorbyHour(request):
     obj1 = xhr.objects
@@ -299,6 +324,21 @@ def getApiError(request):
     }
     return JsonResponse(data=response_dict, safe=True)
 
+def getApiErrorInfo(request):
+    obj1 = xhr.objects.values_list('type', 'eventType', 'pathname', 'status', 'timestamp')
+    obj2 = fetch.objects.values_list('type', 'method', 'url','success', 'timestamp')
+
+    obj = list(merge(obj1, obj2))
+    print(obj)
+    obj.sort(key=lambda x: int(x[-1]))
+    response = []
+    for item in obj:
+        timestamp = item[4]
+        date = time.localtime(int(timestamp) / 1000)
+        t = time.strftime('%Y-%m-%d %H:%M:%S', date)
+        response.append( {'time': t, 'type' : item[0], 'eventType' : item[1], 'url' : item[2], 'status': item[3]})
+    return JsonResponse(data={'data': list(reversed(response))}, safe=True)
+
 def getApiErrorCharts(request):
     obj1 = xhr.objects
     obj2 = fetch.objects
@@ -310,6 +350,7 @@ def getApiErrorCharts(request):
                 len(obj2.filter(success__exact='false')) + len(obj1.all()) - len(obj1.filter(status__exact='200-OK'))}
         ]
     }
+        
     return JsonResponse(data=response_dict, safe=True)
 
 def getMean(value_list):

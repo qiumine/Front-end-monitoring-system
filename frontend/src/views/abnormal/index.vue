@@ -2,28 +2,28 @@
   <div class="container">
     <div class="header">
       <div class="sum">
-        <div id="Errors"></div>
+        <div id="Errors" />
       </div>
       <div class="right">
-        <a class="circle">
+        <a class="circle" href="#jsReason">
           <p>
             JS异常: {{ JsError.total }}
             <br>
           </p>
         </a>
-        <a class="circle">
+        <a class="circle" href="#blankReason">
           <p>
             白屏异常: {{ blank }}
             <br>
           </p>
         </a>
-        <a class="circle">
+        <a class="circle" href="#apiReason">
           <p>
             接口异常: {{ apiError }}
             <br>
           </p>
         </a>
-        <a class="circle">
+        <a class="circle" href="#resourceReason">
           <p>
             资源异常: {{ resourceError }}
             <br>
@@ -36,6 +36,59 @@
       <div id="blankTrend" class="small">白屏异常趋势图</div>
       <div id="apiTrend" class="small">接口异常趋势图</div>
       <div id="resourceTrend" class="small">资源异常趋势图</div>
+
+    </div>
+    <div class="reason">
+      <div id="jsReason" class="small">
+        <h2>JS异常</h2>
+        <ul>
+          <li v-for="item in JsErrorInfo">
+            <span class="time">{{ item.time }}</span>
+            &nbsp;
+            <span class="type">{{ item.type }}</span>
+            :&nbsp;
+            <span class="message">{{ item.message }}</span>
+            <a>{{ item.stack }}</a>
+          </li>
+        </ul>
+      </div>
+      <div id="blankReason" class="small">
+        <h2>白屏异常</h2>
+        <ul>
+          <li v-for="item in blankInfo">
+            <span class="time">{{ item.time }}</span>
+            &nbsp;
+            <span class="type">{{ item.type }}</span>
+            :&nbsp;
+            <span class="message">{{ item.message }}</span>
+          </li>
+        </ul>
+      </div>
+      <div id="apiReason" class="small">
+        <h2>接口异常</h2>
+        <ul>
+          <li v-for="item in apiErrorInfo">
+            <span class="time">{{ item.time }}</span>
+            &nbsp;
+            <span class="type">{{ item.type }} &nbsp; {{ item.eventType }}</span>
+            :&nbsp;
+            <span class="message">{{ item.status }}</span>
+            <a>{{ item.url }}</a>
+          </li>
+        </ul>
+      </div>
+      <div id="resourceReason" class="small">
+        <h2>资源异常</h2>
+        <ul>
+          <li v-for="item in resourceErrorInfo">
+            <span class="time">{{ item.time }}</span>
+            &nbsp;
+            <span class="type">{{ item.type }}</span>
+            :&nbsp;
+            <span class="message">{{ item.message }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -47,9 +100,13 @@ export default {
   data() {
     return {
       JsError: {},
+      JsErrorInfo: [],
       apiError: {},
+      apiErrorInfo: [],
       blank: 0,
-      resourceError: 0
+      blankInfo: [],
+      resourceError: 0,
+      resourceErrorInfo: [],
     }
   },
   created() {
@@ -176,6 +233,12 @@ export default {
           this.JsError = json.data
         })
         .catch((err) => console.log('getJsError Failed', err))
+      fetch('http://127.0.0.1:8000/getJsErrorInfo/')
+        .then((res) => res.json())
+        .then((json) => {
+          this.JsErrorInfo = json.data
+        })
+        .catch((err) => console.log('getJsErrorInfo Failed', err))
     },
     getBlank() {
       fetch('http://127.0.0.1:8000/getBlank/')
@@ -184,6 +247,12 @@ export default {
           this.blank = json.data
         })
         .catch((err) => console.log('getBlank Failed', err))
+      fetch('http://127.0.0.1:8000/getBlankErrorInfo/')
+        .then((res) => res.json())
+        .then((json) => {
+          this.blankInfo = json.data
+        })
+        .catch((err) => console.log('getBlankErrorInfo Failed', err))
     },
     getApiError() {
       fetch('http://127.0.0.1:8000/getApiError/')
@@ -192,6 +261,12 @@ export default {
           this.apiError = json.data.xhr.error + json.data.fetch.error
         })
         .catch((err) => console.log('getApiError Failed', err))
+      fetch('http://127.0.0.1:8000/getApiErrorInfo/')
+        .then((res) => res.json())
+        .then((json) => {
+          this.apiErrorInfo = json.data
+        })
+        .catch((err) => console.log('getApiErrorInfo Failed', err))
     },
     getResourceError() {
       fetch('http://127.0.0.1:8000/getResourceError/')
@@ -200,6 +275,12 @@ export default {
           this.resourceError = json.data
         })
         .catch((err) => console.log('getResourceError Failed', err))
+      fetch('http://127.0.0.1:8000/getResourceErrorInfo/')
+        .then((res) => res.json())
+        .then((json) => {
+          this.resouceErrorInfo = json.data
+        })
+        .catch((err) => console.log('getResourceErrorInfo Failed', err))
     }
   }
 }
@@ -211,6 +292,7 @@ export default {
 }
 .container {
   display: flex;
+  overflow: scroll;
   flex-direction: column;
   height: calc(100vh - 50px);
   background-color: #e9eef3;
@@ -229,12 +311,13 @@ export default {
       align-items: center;
     }
     .right {
+
       flex: 1;
       display: flex;
       justify-content: space-evenly;
       align-items: center;
       .circle {
-        border: 2px solid red;
+        border: 10px solid rgb(255, 94, 0);
         font-weight: bold;
         border-radius: 50%;
         aspect-ratio: 1/1;
@@ -266,6 +349,36 @@ export default {
       align-items: center;
       margin: 2vh 1vw;
       padding: 20px;
+    }
+  }
+  .reason{
+    .small{
+      width: 98%;
+      height: 400px;
+      overflow: auto;
+      background-color: #fff;
+      border-radius: 25px;
+      margin: 2vh 1vw;
+      padding: 10px;
+      h2{
+        margin: 20px;
+      }
+      .message{
+        color: red;
+      }
+      .time{
+        color: rgb(0, 119, 255);
+      }
+      li{
+        list-style: none;
+        margin: 10px;
+      }
+      a{
+        float: right;
+        clear: both;
+        color:rgb(0, 0, 238);
+        text-decoration: underline;
+      }
     }
   }
 }
