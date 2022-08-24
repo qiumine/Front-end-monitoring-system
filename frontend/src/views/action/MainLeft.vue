@@ -8,24 +8,24 @@ export default {
   data() {
     return {
       line: "",
-      data:[
-                {
-                    "Date": "2010-01",
-                    "scales": 1998
-                },
-                {
-                    "Date": "2010-02",
-                    "scales": 1850
-                },
-                {
-                    "Date": "2010-03",
-                    "scales": 1720
-                },
-                {
-                    "Date": "2010-04",
-                    "scales": 1818
-                },
-            ]
+      data: [
+        {
+          Date: "2010-01",
+          scales: 1998,
+        },
+        {
+          Date: "2010-02",
+          scales: 1850,
+        },
+        {
+          Date: "2010-03",
+          scales: 1720,
+        },
+        {
+          Date: "2010-04",
+          scales: 1818,
+        },
+      ],
     };
   },
   computed: {},
@@ -38,7 +38,7 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           this.line = new Line("mainLeft", {
-            data:this.data,
+            data: this.data,
             padding: "auto",
             xField: "Date",
             yField: "scales",
@@ -52,16 +52,18 @@ export default {
     },
   },
   created() {
+    // this.init();
+  },
+  mounted() {
     this.init();
   },
-  mounted() {},
 };
 </script>
 <style scoped>
 #mainLeft {
   width: 95%;
   height: 80%;
-  left:2%;
+  left: 2%;
   position: relative;
 }
 </style>

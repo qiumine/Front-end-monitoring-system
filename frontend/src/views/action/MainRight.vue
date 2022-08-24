@@ -41,9 +41,7 @@ export default {
 </script>
 <style scoped>
 #mainRight {
-  width: 95%;
-  height: 80%;
-  left:2%;
-  position: relative;
+  width: 100%;
+  height: 90%;
 }
 </style>

@@ -22,9 +22,9 @@
       <div class="center">
         <div class="center-container">
           <div class="title">
-            <span>待改</span>
+            <span>页面停留时间分段数量占比</span>
           </div>
-          <Center></Center>
+          <div class="vue-container"><Center></Center></div>
         </div>
       </div>
       <div class="right">
@@ -51,13 +51,14 @@
         <div class="title">
           <span>待改</span>
         </div>
+
         <MainLeft></MainLeft>
       </div>
       <div class="right">
         <div class="title">
           <span>待改</span>
         </div>
-        <MainRight></MainRight>
+        <div class="vue-container"><MainRight></MainRight></div>
       </div>
     </div>
   </div>
@@ -174,5 +175,9 @@ export default {
     border-radius: 5px;
     background-color: #fff;
   }
+}
+.vue-container {
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -3,47 +3,65 @@
 </template>
 
 <script>
-import { Line } from "@antv/g2plot";
+import { Pie } from "@antv/g2plot";
 export default {
   data() {
     return {
-      line: "",
+      piePlot: "",
+      data: [
+        { type: "<5s", value: 0 },
+        { type: "5s~60s", value: 0 },
+        { type: "1min~5min", value: 0 },
+        { type: "5min~15min", value: 0 },
+        { type: ">15min", value: 0 },
+      ],
     };
   },
   computed: {},
   methods: {
     init() {
-      //待改
-      fetch(
-        "http://127.0.0.1:8000/getJsError/"
-      )
+      this.getStaytimeCharts();
+      this.paint();
+    },
+    getStaytimeCharts() {
+      fetch("http://127.0.0.1:8000/getStaytimeCharts/")
         .then((res) => res.json())
-        .then((data) => {
-          this.line = new Line("center", {
-            data,
-            padding: "auto",
-            xField: "Date",
-            yField: "scales",
-            xAxis: {
-              // type: 'timeCat',
-              tickCount: 5,
-            },
-          });
-          this.line.render();
-        });
+        .then((json) => {
+          this.data = json.data;
+        })
+        .catch((err) => console.log("getStaytimeCharts Failed", err));
+    },
+    paint() {
+      this.piePlot = new Pie("center", {
+        appendPadding: 10,
+        data: this.data,
+        angleField: "value",
+        colorField: "type",
+        radius: 0.9,
+        label: {
+          type: "inner",
+          offset: "-30%",
+          content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+          style: {
+            fontSize: 14,
+            textAlign: "center",
+          },
+        },
+        interactions: [{ type: "element-active" }],
+      });
+      this.piePlot.render();
     },
   },
-  created() {
-    // this.init();
+  mounted() {
+    this.init();
   },
-  mounted() {},
 };
 </script>
 <style scoped>
 #center {
   width: 95%;
   height: 80%;
-  left:2%;
+  left: 2%;
   position: relative;
 }
 </style>
