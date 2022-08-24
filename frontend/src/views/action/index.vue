@@ -57,26 +57,28 @@
         <div class="title">
           <span>UV趋势图</span>
         </div>
-        <div class="vue-container"><MainRight></MainRight></div>
+        <div class="vue-container">
+          <div id="mainRight"></div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Line } from "@antv/g2plot";
+
 import Center from "./Center";
 import MainLeft from "./MainLeft";
-import MainRight from "./MainRight";
+
 export default {
   name: "action",
   components: {
     Center,
     MainLeft,
-    MainRight,
   },
   data() {
     return {
-      newVisitor: 0,
       PV: 0,
       UV: 0,
       TP: {
@@ -85,13 +87,24 @@ export default {
         average: 0, //平均值
         all: [0], //全部值
       },
+      line: "",
+      data: [
+        { date: "2022-08-22", value: 1 },
+        { date: "2022-08-23", value: 3 },
+      ],
     };
+  },
+  computed: {
+    newVisitor() {
+      return this.data.at(-1)?.value - this.data.at(-2)?.value || 0;
+    },
   },
   methods: {
     getData() {
       this.getPV();
       this.getUV();
       this.getStaytime();
+      this.getUVbyDay();
     },
     getPV() {
       fetch("http://127.0.0.1:8000/getPV/")
@@ -116,6 +129,29 @@ export default {
           this.TP = json.data;
         })
         .catch((err) => console.log("getStaytime Failed", err));
+    },
+    getUVbyDay() {
+      fetch("http://127.0.0.1:8000/getUVbyDay/")
+        .then((res) => res.json())
+        .then((json) => {
+          this.data = json.data;
+          this.paint();
+        })
+        .catch((err) => console.log("getUVbyDay Failed", err))
+        .finally(() => this.paint());
+    },
+    paint() {
+      this.line = new Line("mainRight", {
+        data: this.data,
+        padding: "auto",
+        xField: "date",
+        yField: "value",
+        xAxis: {
+          // type: 'timeCat',
+          tickCount: 5,
+        },
+      });
+      this.line.render();
     },
   },
   created() {
@@ -196,5 +232,12 @@ export default {
   width: 100%;
   height: 100%;
   margin: 10px;
+}
+#mainRight {
+  width: 95%;
+  height: 80%;
+  left: 2.5%;
+  top: 10%;
+  position: relative;
 }
 </style>
