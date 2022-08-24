@@ -6,13 +6,12 @@
 import { Pie } from '@antv/g2plot'
 let chartChange
 export default {
-    name: 'PieChart',
     props: {
         value: {
-            type: Array,
             default() {
                 return [
-                    { type: '成功', value: 75 },
+                    { type: 'xhr成功', value: 50 },
+                    { type: 'fecth成功', value: 25 },
                     { type: '失败', value: 25 },
                 ]
             },
@@ -22,28 +21,25 @@ export default {
             default: 0,
         },
     },
-    // 监听
-    watch: {
-        value: {
-            handler(newVal, oldVal) {
-                console.log(newVal)
-                // 更新数据
-                chartChange.changeData(newVal)
-
-                // 销毁后再渲染
-                // chartChange.destroy()
-                // this.init()
-            },
-            deep: true, //深度监听
-            // immediate: true,
-        },
-    },
     mounted() {
         this.init()
     },
     methods: {
-        init() {
-            chartChange = new Pie(this.$refs.PieChart, {
+        async init() {
+            await this.getApiError();
+            this.paint();
+        },
+        getApiError() {
+            fetch("http://127.0.0.1:8000/getApiError/")
+                .then((res) => res.json())
+                .then((json) => {
+                    this.value = json.data;
+                    this.paint();
+                })
+                .catch((err) => console.log("getApiError Failed", err));
+        },
+        paint() {
+            chartChange = new Pie("circle", {
                 data: this.value,
                 height: this.Height,
                 appendPadding: 10,
@@ -88,7 +84,7 @@ export default {
                     { type: 'element-active' },
                 ],
             })
-            chartChange.render()
+            chartChange.render();
         },
     },
 }
