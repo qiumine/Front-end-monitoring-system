@@ -25,7 +25,6 @@ export default {
                 .then((res) => res.json())
                 .then((json) => {
                     this.data = json.data;
-                    this.paint();
                 })
                 .catch((err) => console.log("getApiErrorCharts Failed", err))
                 .finally(() => this.paint());
