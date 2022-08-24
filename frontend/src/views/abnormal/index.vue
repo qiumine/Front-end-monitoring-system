@@ -371,7 +371,13 @@ export default {
       }
       li{
         list-style: none;
-        margin: 10px;
+        margin: 5px;
+        padding: 5px;
+        border-radius: 5px;
+      }
+      li:hover{
+        background-color: #eee;
+        opacity: 0.7;
       }
       a{
         float: right;

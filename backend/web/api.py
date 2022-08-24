@@ -18,7 +18,7 @@ def getErrors(request):
         {'type' : 'js error', 'value' : len(jsError.objects.filter(errorType__exact='jsError'))},
         {'type' : 'promise error', 'value' : len(jsError.objects.filter(errorType__exact='promiseError'))},
         {'type' : 'xhr error', 'value' : len(xhr.objects.all()) - len(xhr.objects.filter(status__exact='200-OK'))},
-        {'type' : 'fetch error', 'value' : len(fetch.objects.filter(success__exact='false'))},
+        {'type' : 'fetch error', 'value' : len(fetch.objects.filter(success__exact='False'))},
         {'type' : 'blank error', 'value' : data}
     ]
     return JsonResponse(data={'data': response}, safe=True)
@@ -259,7 +259,7 @@ def getApiErrorbyHour(request):
                     'fetch' : 0
                 }
 
-        trend[day][hour]['fetch'] += 1 if item.success == 'false' else 0
+        trend[day][hour]['fetch'] += 1 if item.success == 'False' else 0
     
     response = []
     for day, hours in trend.items():
@@ -295,7 +295,7 @@ def getApiErrorbyDay(request):
                 'xhr' : 0,
                 'fetch' : 0
             }
-        trend[format_date]['fetch'] += 1 if item.success == 'false' else 0
+        trend[format_date]['fetch'] += 1 if item.success == 'False' else 0
     
     response = []
     for key, data in trend.items():
@@ -324,19 +324,38 @@ def getApiError(request):
     }
     return JsonResponse(data=response_dict, safe=True)
 
+from django.forms.models import model_to_dict
 def getApiErrorInfo(request):
     obj1 = xhr.objects.values_list('type', 'eventType', 'pathname', 'status', 'timestamp')
     obj2 = fetch.objects.values_list('type', 'method', 'url','success', 'timestamp')
 
     obj = list(merge(obj1, obj2))
-    print(obj)
     obj.sort(key=lambda x: int(x[-1]))
     response = []
     for item in obj:
         timestamp = item[4]
         date = time.localtime(int(timestamp) / 1000)
         t = time.strftime('%Y-%m-%d %H:%M:%S', date)
+        if item[3] == '200-OK' or item[3] == 'True':
+            continue
         response.append( {'time': t, 'type' : item[0], 'eventType' : item[1], 'url' : item[2], 'status': item[3]})
+    return JsonResponse(data={'data': list(reversed(response))}, safe=True)
+
+def getApiInfo(request):
+    obj1 = xhr.objects.all()
+    obj2 = fetch.objects.all()
+
+    obj = list(obj1) + list(obj2)
+    response = []
+    for item in obj:
+        info = {'type' : item.type}
+        info['method'] = item.method if item.type == 'fetch' else item.eventType
+        info['url'] = item.url if item.type == 'fetch' else item.pathname
+        body = model_to_dict(item)
+        del body['id']
+        info['body'] = body
+        response.append(info)
+    
     return JsonResponse(data={'data': list(reversed(response))}, safe=True)
 
 def getApiErrorCharts(request):
@@ -345,9 +364,9 @@ def getApiErrorCharts(request):
     response_dict = {
         'data' : [
             {'type': 'xhr成功', 'value': len(obj1.filter(status__exact='200-OK'))},
-            {'type': 'fetch成功', 'value': len(obj2.filter(success__exact='true'))},
+            {'type': 'fetch成功', 'value': len(obj2.filter(success__exact='True'))},
             {'type': '失败', 'value': 
-                len(obj2.filter(success__exact='false')) + len(obj1.all()) - len(obj1.filter(status__exact='200-OK'))}
+                len(obj2.filter(success__exact='False')) + len(obj1.all()) - len(obj1.filter(status__exact='200-OK'))}
         ]
     }
         
