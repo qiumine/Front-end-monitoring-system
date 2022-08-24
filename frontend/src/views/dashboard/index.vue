@@ -21,6 +21,8 @@ export default {
 .dashboard {
   &-container {
     margin: 30px;
+    display: flex;
+    justify-content: center;
   }
   &-text {
     font-size: 30px;

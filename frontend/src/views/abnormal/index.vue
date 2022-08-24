@@ -8,7 +8,7 @@
         <div class="circle">JS异常</div>
         <div class="circle">白屏异常</div>
         <div class="circle">接口异常</div>
-        <div class="circle">性能异常</div>
+        <div class="circle">资源异常</div>
       </div>
     </div>
     <div class="main">
