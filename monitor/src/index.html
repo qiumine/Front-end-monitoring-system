@@ -27,10 +27,21 @@
             <input id="errorBtn" type="button" value="fetch失败请求" onclick="sendFetchError()">
             <!-- fetch成功请求 -->
             <input id="errorBtn" type="button" value="fetch成功请求" onclick="sendFetchSuccess()">
+            <!-- 资源异常请求 -->
+            <input id="resourceError" type="button" value="资源异常" onclick="getResourceError()">
 
         </div>
     </div>
     <script>
+        //资源异常
+        function getResourceError(){
+            const container = document.querySelector('#container');
+            const img = document.createElement('img');
+            img.src  = '/picture.png';
+            container.appendChild(img);
+
+        }
+
         // error错误
         function errorClick() {
             //someVar未定义
@@ -184,7 +195,9 @@
             return hash.toString();
         }
 
-
+        // window.addEventListener('error',(error)=>{
+        //     console.log("捕获资源呢异常",error);
+        // },true)
 
     </script>
     <!-- 资源加载错误 -->
