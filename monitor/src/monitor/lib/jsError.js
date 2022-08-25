@@ -5,7 +5,7 @@ import tracker from "../utils/tracker";
 export function injectJsError() {
     //监听全局未捕获的错误
     window.addEventListener('error', function (event) {//错误事件对象
-        console.log('error', event);
+        // console.log('error', event);
         let lastEvent = getLastEvent(); //最后一个交互事件
         if (event.target && (event.target.src || event.target.href)) {
             //脚本加载错误
