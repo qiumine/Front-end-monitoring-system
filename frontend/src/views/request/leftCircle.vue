@@ -9,9 +9,9 @@ export default {
         return {
             piePlot: "",
             data: [
-                { type: "xhr成功", value: 50 },
-                { type: "fecth成功", value: 25 },
-                { type: "失败", value: 25 },
+                { type: "xhr成功", value: 0 },
+                { type: "fecth成功", value: 0 },
+                { type: "失败", value: 0 },
             ],
         };
     },

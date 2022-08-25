@@ -45,10 +45,10 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware", #跨域
-    "django.middleware.common.CommonMiddleware", #跨域
+    "corsheaders.middleware.CorsMiddleware",  # 跨域
+    "django.middleware.common.CommonMiddleware",  # 跨域
     "django.middleware.common.CommonMiddleware",
-    #"django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -81,11 +81,11 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.mysql',    # 数据库引擎
-        'NAME': 'test', # 数据库名称
-        'HOST': '127.0.0.1', # 数据库地址，本机 ip 地址 127.0.0.1 
-        'PORT': 3306, # 端口 
+        'NAME': 'monitor',  # 数据库名称
+        'HOST': '127.0.0.1',  # 数据库地址，本机 ip 地址 127.0.0.1
+        'PORT': 3306,  # 端口
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': 'admin123', # 数据库密码
+        'PASSWORD': 'root',  # 数据库密码
     }
 }
 
@@ -97,9 +97,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
 ]
 
 
@@ -125,10 +125,10 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-#跨域增加忽略
+# 跨域增加忽略
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
- # 对应的发送的请求的跨域
+# 对应的发送的请求的跨域
 CORS_ALLOW_METHODS = (
     'DELETE',
     'GET',
@@ -138,7 +138,7 @@ CORS_ALLOW_METHODS = (
     'PUT',
     'VIEW',
 )
- 
+
 CORS_ALLOW_HEADERS = (
     'accept',
     'accept-encoding',
