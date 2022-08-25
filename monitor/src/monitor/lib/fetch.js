@@ -33,7 +33,6 @@ export function injectFetch() {
                 console.log('err:' + err);
                 reportData.endTime = Date.now();
                 reportData.duration = reportData.endTime - reportData.startTime;
-                reportData.status = 0;
                 reportData.success = false;
 
                 tracker.send(reportData);
