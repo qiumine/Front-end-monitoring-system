@@ -327,7 +327,7 @@ def getApiError(request):
 from django.forms.models import model_to_dict
 def getApiErrorInfo(request):
     obj1 = xhr.objects.values_list('type', 'eventType', 'pathname', 'status', 'timestamp')
-    obj2 = fetch.objects.values_list('type', 'method', 'url','success', 'timestamp')
+    obj2 = fetch.objects.values_list('type', 'method', 'url','status', 'timestamp')
 
     obj = list(merge(obj1, obj2))
     obj.sort(key=lambda x: int(x[-1]))
@@ -336,7 +336,7 @@ def getApiErrorInfo(request):
         timestamp = item[4]
         date = time.localtime(int(timestamp) / 1000)
         t = time.strftime('%Y-%m-%d %H:%M:%S', date)
-        if item[3] == '200-OK' or item[3] == 'True':
+        if item[3] == '200-OK' or item[3] == '200':
             continue
         response.append( {'time': t, 'type' : item[0], 'eventType' : item[1], 'url' : item[2], 'status': item[3]})
     return JsonResponse(data={'data': list(reversed(response))}, safe=True)
