@@ -337,11 +337,11 @@ export default {
     height: 75vh;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     .small {
-      width: 26.5vw;
-      height: 30vh;
+      width: 35vw;
+      height: 35vh;
       background-color: #fff;
       border-radius: 25px;
       display: flex;

@@ -132,11 +132,11 @@ export default {
       text-align: left;
       padding: 15px;
       h3{
-        margin-left: 100px;
+        margin-left: 50px;
         margin-bottom: 0;
       }
       .info {
-        margin-left: 100px;
+        margin-left: 50px;
       }
       #url {
         width: 100%;
