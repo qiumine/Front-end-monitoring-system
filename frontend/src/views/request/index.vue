@@ -17,7 +17,14 @@
         </div>
       </div>
       <div class="small">
-        返回信息： {{ this.body }}
+        <h3>返回信息：</h3>
+        <br>
+        <div class="info">
+          <span v-for="(value, key) in body">
+            {{ key }} : {{ value }}
+            <br>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -120,21 +127,33 @@ export default {
       aspect-ratio: 2/1;
       background-color: #fff;
       border-radius: 25px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin: 10px 0;
-      overflow: scroll;
-
+      overflow: auto;
+      text-align: left;
+      padding: 15px;
+      h3{
+        margin-left: 100px;
+        margin-bottom: 0;
+      }
+      .info {
+        margin-left: 100px;
+      }
       #url {
         width: 100%;
 
         ul {
           width: 100%;
-
-          li {
+          text-align: left;
+          li{
             list-style: none;
-            text-align: left;
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+          }
+
+          li:hover{
+            background-color: #eee;
+            opacity: 0.7;
           }
         }
       }
