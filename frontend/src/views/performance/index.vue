@@ -3,43 +3,43 @@
     <div class="header">
       <div class="small" title="First Paint">
         <h2>FP:</h2>
-        <h1>{{this.FP}}ms</h1>
+        <span>{{this.FP}}ms</span>
       </div>
       <div class="small" title="First ContentFul Paint">
         <h2>FCP:</h2>
-        <h1>{{this.FCP}}ms</h1>
+        <span>{{this.FCP}}ms</span>
       </div>
       <div class="small" title="DOM Content Loaded Time">
         <h2>DOM Ready:</h2>
-        <h1>{{this.DOM}}ms</h1>
+        <span>{{this.DOM}}ms</span>
       </div>
     </div>
     <div class="header">
       <div class="small" title="发起请求到第一个字节到达的时间">
         <h2>ttfbtime:</h2>
-        <h1>{{this.ttfb}}ms</h1>
+        <span>{{this.ttfb}}ms</span>
       </div>
       <div class="small" title="接口响应时间">
         <h2>responsetime:</h2>
-        <h1>{{this.responsetime}}ms</h1>
+        <span>{{this.responsetime}}ms</span>
       </div>
       <div class="small" title="页面加载完成的总时间">
         <h2>load time:</h2>
-        <h1>{{this.LoadTime}}ms</h1>
+        <span>{{this.LoadTime}}ms</span>
       </div>
     </div>
     <div class="header">
       <div class="small" title="inputDelay">
         <h2>inputDelay:</h2>
-        <h1>{{this.inputDelay}}ms</h1>
+        <span>{{this.inputDelay}}ms</span>
       </div>
       <div class="small" title="（largest contentful Paint），最大内容渲染时间。">
         <h2>LCP:</h2>
-        <h1>{{this.LCP}}ms</h1>
+        <span>{{this.LCP}}ms</span>
       </div>
       <div class="small" title="（First Meaningful Paint），首次渲染有意义的内容的时间">
         <h2>FMP:</h2>
-        <h1>{{this.FMP}}ms</h1>
+        <span>{{this.FMP}}ms</span>
       </div>
     </div>
   </div>
@@ -77,7 +77,7 @@ export default {
       fetch("http://127.0.0.1:8000/getPaint/")
         .then((res) => res.json())
         .then((json) => {
-          this.FP = json.data.firstPaint;
+          this.FP = parseFloat(json.data.firstPaint).toFixed(2);
         })
         .catch((err) => console.log("getFP Failed", err));
     },
@@ -85,7 +85,7 @@ export default {
       fetch("http://127.0.0.1:8000/getPaint/")
         .then((res) => res.json())
         .then((json) => {
-          this.FCP = json.data.firstContentFulPaint;
+          this.FCP = parseFloat(json.data.firstContentFulPaint).toFixed(2);
         })
         .catch((err) => console.log("getFCP Failed", err));
     },
@@ -93,7 +93,7 @@ export default {
         fetch("http://127.0.0.1:8000/getTiming/")
         .then((res) => res.json())
         .then((json) => {
-          this.DOM = json.data.domContentLoadedTime;
+          this.DOM = parseFloat(json.data.domContentLoadedTime).toFixed(2);
         })
         .catch((err) => console.log("getDOM Failed", err));
     },
@@ -101,7 +101,7 @@ export default {
         fetch("http://127.0.0.1:8000/getTiming/")
         .then((res) => res.json())
         .then((json) => {
-          this.ttfb = json.data.ttfbTime;
+          this.ttfb = parseFloat(json.data.ttfbTime).toFixed(2);
         })
         .catch((err) => console.log("getttfb Failed", err));
     },
@@ -109,7 +109,7 @@ export default {
         fetch("http://127.0.0.1:8000/getTiming/")
         .then((res) => res.json())
         .then((json) => {
-          this.responsetime = json.data.responseTime;
+          this.responsetime = parseFloat(json.data.responseTime).toFixed(2);
         })
         .catch((err) => console.log("getresponsetime Failed", err));
     },
@@ -117,7 +117,7 @@ export default {
         fetch("http://127.0.0.1:8000/getTiming/")
         .then((res) => res.json())
         .then((json) => {
-          this.LoadTime = json.data.loadTime;
+          this.LoadTime = parseFloat(json.data.loadTime).toFixed(2);
         })
         .catch((err) => console.log("getLoadTime Failed", err));
     },
@@ -125,7 +125,7 @@ export default {
         fetch("http://127.0.0.1:8000/getFirstInputDelay/")
         .then((res) => res.json())
         .then((json) => {
-          this.inputDelay = json.data.inputDelay;
+          this.inputDelay = parseFloat(json.data.inputDelay).toFixed(2);
         })
         .catch((err) => console.log("getinputDelay Failed", err));
     },
@@ -133,7 +133,7 @@ export default {
       fetch("http://127.0.0.1:8000/getPaint/")
         .then((res) => res.json())
         .then((json) => {
-          this.LCP = json.data.largestContentfulPaint;
+          this.LCP = parseFloat(json.data.largestContentfulPaint).toFixed(2);
         })
         .catch((err) => console.log("getLCP Failed", err));
     },
@@ -141,7 +141,7 @@ export default {
       fetch("http://127.0.0.1:8000/getPaint/")
         .then((res) => res.json())
         .then((json) => {
-          this.FMP = json.data.firstMeaningfulPaint;
+          this.FMP = parseFloat(json.data.firstMeaningfulPaint).toFixed(2);
         })
         .catch((err) => console.log("getFMP Failed", err));
     }
@@ -155,35 +155,43 @@ export default {
 <style lang="scss" scoped>
 .container {
   display: flex;
+  border-style:none;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   height: calc(100vh - 50px);
   margin: 0;
-  padding: 5px;
+  padding: 20px;
   background-color: #e9eef3;
   overflow: hidden;
   .header {
-    height: 33%;
-    width: 100%;
+    height: 30%;
+    width: 95%;
     margin: 10px;
-    border: 1px solid #000;
+    border: 0px solid #000;
     border-radius: 20px;
-    background-color: #fff;
+    background-color: #e9eef3;
     display: flex;
     justify-content: center;
     align-items: center;
-    .small {
+  }
+  .small {
       margin: 0 20px;
       flex: 1;
-      height: 80%;
-      border: 1px solid #000;
-      border-radius: 15px;
+      height: 90%;
+      border: 0px solid #000;
+      border-radius: 30px;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      background-color: #fff;
     }
+  .small:hover {
+      transform: scale(1.15);
+  }
+  .small span{
+    font-size: larger;
   }
   .main {
     flex: 1;
