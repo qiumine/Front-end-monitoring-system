@@ -4,7 +4,6 @@
       <div class="circle">
         <LeftCircle></LeftCircle>
       </div>
-
       <h3>成功率</h3>
     </div>
     <div class="right">
@@ -22,7 +21,34 @@ export default {
   components: {
     LeftCircle
   },
-  methods: {},
+  data() {
+    return {
+      data: [
+        { "type": "fetch", "method": "GET", "url": "/success", "body": { "kind": "stability", "type": "fetch", "startTime": "1661266057726", "url": "/success", "method": "GET", "endTime": "1661266057731", "duration": "5", "status": "0", "success": "False", "title": "\u524d\u7aef\u76d1\u63a7SDK", "timestamp": "1661266057731" } },
+        { "type": "xhr", "method": "load", "url": "/error", "body": { "kind": "stability", "type": "xhr", "eventType": "load", "pathname": "/error", "status": "500-Internal Server Error", "duration": "5", "response": "", "params": "name=luo", "timestamp": "1661265503363" } },
+      ]
+    };
+  },
+  methods: {
+    getData() {
+      this.getApiInfo();
+    },
+    getApiInfo() {
+      fetch("http://127.0.0.1:8000/getApiInfo/")
+        .then((res) => res.json())
+        .then((json) => {
+          this.data = json.data;
+        })
+        .catch((err) => console.log("getApiInfo", err));
+    },
+
+  },
+  created() {
+    this.getData();
+    console.log('this.data', this.data);
+
+  },
+
 };
 </script>
 
