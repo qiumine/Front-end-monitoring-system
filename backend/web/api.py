@@ -326,7 +326,7 @@ def getApiError(request):
 
 from django.forms.models import model_to_dict
 def getApiErrorInfo(request):
-    obj1 = xhr.objects.values_list('type', 'eventType', 'pathname', 'status', 'timestamp')
+    obj1 = xhr.objects.values_list('type', 'method', 'pathname', 'status', 'timestamp')
     obj2 = fetch.objects.values_list('type', 'method', 'url','status', 'timestamp')
 
     obj = list(merge(obj1, obj2))
@@ -338,7 +338,7 @@ def getApiErrorInfo(request):
         t = time.strftime('%Y-%m-%d %H:%M:%S', date)
         if item[3] == '200-OK' or item[3] == '200':
             continue
-        response.append( {'time': t, 'type' : item[0], 'eventType' : item[1], 'url' : item[2], 'status': item[3]})
+        response.append( {'time': t, 'type' : item[0], 'method' : item[1], 'url' : item[2], 'status': item[3]})
     return JsonResponse(data={'data': list(reversed(response))}, safe=True)
 
 def getApiInfo(request):
@@ -349,7 +349,7 @@ def getApiInfo(request):
     response = []
     for item in obj:
         info = {'type' : item.type}
-        info['method'] = item.method if item.type == 'fetch' else item.eventType
+        info['method'] = item.method
         info['url'] = item.url if item.type == 'fetch' else item.pathname
         body = model_to_dict(item)
         del body['id']

@@ -70,7 +70,7 @@
           <li v-for="item in apiErrorInfo">
             <span class="time">{{ item.time }}</span>
             &nbsp;
-            <span class="type">{{ item.type }} &nbsp; {{ item.eventType }}</span>
+            <span class="type">{{ item.type }} &nbsp; ({{ item.method }})</span>
             :&nbsp;
             <span class="message">{{ item.status }}</span>
             <a>{{ item.url }}</a>
