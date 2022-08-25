@@ -22,7 +22,7 @@ export function injectXHR() {
                 tracker.send({
                     kind: 'stability',
                     type: 'xhr',
-                    method: (this.logData.method).toUpperCase(),
+                    method: (this.logData.method).toUpperCase(), //方法
                     eventType: type, // load error abort
                     pathname: this.logData.url, //请求路径
                     status: status + '-' + statusText, //他状态码

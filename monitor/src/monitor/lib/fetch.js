@@ -25,7 +25,7 @@ export function injectFetch() {
 
                 return res.json();
             }).then(function (response) {
-                console('response', response);
+                console.log('response', response);
                 reportData.response = response ? response : '';//响应体
                 tracker.send(reportData);
             })
