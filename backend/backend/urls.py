@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^getJsErrorInfo/$', api.getJsErrorInfo, name='getJsErrorInfo'),
     url(r'^getBlankErrorInfo/$', api.getBlankErrorInfo, name='getBlankErrorInfo'),
     url(r'^getApiErrorInfo/$', api.getApiErrorInfo, name='getApiErrorInfo'),
+    url(r'^getApiInfo/$', api.getApiInfo, name='getApiInfo'),
     url(r'^getErrors/$', api.getErrors, name='getErrors'),
     #resourceError
     url(r'^getResourceError/$', api.getResourceError, name='getResourceError'),

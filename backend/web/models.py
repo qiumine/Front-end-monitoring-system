@@ -65,6 +65,7 @@ class paint(models.Model):
 class xhr(models.Model):
     kind = models.CharField(max_length=30)
     type = models.CharField(max_length=30)
+    method = models.CharField(max_length=30)
     eventType = models.CharField(max_length=30)
     pathname = models.CharField(max_length=300)
     status = models.CharField(max_length=300)

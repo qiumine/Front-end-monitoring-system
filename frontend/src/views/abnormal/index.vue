@@ -70,7 +70,7 @@
           <li v-for="item in apiErrorInfo">
             <span class="time">{{ item.time }}</span>
             &nbsp;
-            <span class="type">{{ item.type }} &nbsp; {{ item.eventType }}</span>
+            <span class="type">{{ item.type }} &nbsp; ({{ item.method }})</span>
             :&nbsp;
             <span class="message">{{ item.status }}</span>
             <a>{{ item.url }}</a>
@@ -371,7 +371,13 @@ export default {
       }
       li{
         list-style: none;
-        margin: 10px;
+        margin: 5px;
+        padding: 5px;
+        border-radius: 5px;
+      }
+      li:hover{
+        background-color: #eee;
+        opacity: 0.7;
       }
       a{
         float: right;
